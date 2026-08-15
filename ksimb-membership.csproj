@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>ksimb_membership</RootNamespace>
+        <AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
+        <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+        <UserSecretsId>34cab237-4deb-48c7-bbf4-361c4b793fe9</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Humanizer.Core" Version="3.0.10" />
+      <PackageReference Include="MahApps.Metro.IconPacks.PhosphorIcons" Version="6.2.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    </ItemGroup>
+
+</Project>

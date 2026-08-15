@@ -1,0 +1,252 @@
+﻿@page "/register"
+@using System.ComponentModel.DataAnnotations
+@using Humanizer
+@using ksimb_membership.Modules
+@using ksimb_membership.Modules.Members
+
+<PageTitle>Učlanjenje</PageTitle>
+
+<div class="h-100 w-100 d-flex justify-content-center align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                
+                <div class="register-card">
+
+                    <div class="mb-4">
+                        <h1 class="h3 fw-bold mb-2">Učlani se</h1>
+
+                        <p class="text-secondary mb-0">
+                            Ispuni podatke za prijavu.
+                        </p>
+                    </div>
+
+                    <EditForm Model="@_model" OnValidSubmit="@HandleSubmit">
+                        <DataAnnotationsValidator/>
+
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">
+                                Ime
+                            </label>
+
+                            <InputText
+                                id="firstName"
+                                class="form-control form-control-lg"
+                                @bind-Value="_model.FirstName"/>
+
+                            <ValidationMessage For="@(() => _model.FirstName)"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">
+                                Prezime
+                            </label>
+
+                            <InputText
+                                id="lastName"
+                                class="form-control form-control-lg"
+                                @bind-Value="_model.LastName"/>
+
+                            <ValidationMessage For="@(() => _model.LastName)"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                Email
+                            </label>
+
+                            <InputText
+                                id="email"
+                                type="email"
+                                class="form-control form-control-lg"
+                                @bind-Value="_model.Email"/>
+
+                            <ValidationMessage For="@(() => _model.Email)"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phoneNumber" class="form-label">
+                                Broj telefona
+                            </label>
+
+                            <InputText
+                                id="phoneNumber"
+                                type="tel"
+                                class="form-control form-control-lg"
+                                @bind-Value="_model.PhoneNumber"/>
+
+                            <ValidationMessage For="@(() => _model.PhoneNumber)"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="personalIdentityNumber" class="form-label">
+                                OIB
+                            </label>
+
+                            <InputText
+                                id="personalIdentityNumber"
+                                class="form-control form-control-lg"
+                                inputmode="numeric"
+                                maxlength="11"
+                                @bind-Value="_model.PersonalIdentityNumber"/>
+
+                            <ValidationMessage For="@(() => _model.PersonalIdentityNumber)"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="college" class="form-label">
+                                Fakultet
+                            </label>
+
+                            <InputSelect
+                                id="college"
+                                class="form-select form-select-lg"
+                                @bind-Value="_model.College">
+
+                                <option value="">Odaberi fakultet</option>
+
+                                @foreach (var college in Enum.GetValues<College>())
+                                {
+                                    <option value="@college" class="form">
+                                        @college.Humanize()
+                                    </option>
+                                }
+                            </InputSelect>
+
+                            <ValidationMessage For="@(() => _model.College)"/>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label" for="gender">
+                                Spol
+                            </label>
+
+                            <InputSelect
+                                id="gender"
+                                class="form-select form-select-lg"
+                                @bind-Value="_model.Gender">
+
+                                @foreach (var gender in Enum.GetValues<Gender>())
+                                {
+                                    <option value="@gender" class="form">
+                                        @gender.Humanize()
+                                    </option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="dateOfBirth" class="form-label">
+                                Datum rođenja
+                            </label>
+
+                            <InputDate
+                                id="dateOfBirth"
+                                class="form-control form-control-lg"
+                                @bind-Value="_model.DateOfBirth"/>
+
+                            <ValidationMessage For="@(() => _model.DateOfBirth)"/>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn primary-button btn-lg w-100"
+                            disabled="@_isSubmitting">
+
+                            @if (_isSubmitting)
+                            {
+                                <span
+                                    class="spinner-border spinner-border-sm me-2"
+                                    aria-hidden="true">
+                                </span>
+
+                                <span>Šaljem...</span>
+                            }
+                            else
+                            {
+                                <span>Pošalji prijavu</span>
+                            }
+
+                        </button>
+
+                    </EditForm>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Inject] private IMembersService MembersService { get; set; } = null!;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    [Inject] private ICurrentUserService CurrentUserService { get; set; } = null!;
+
+    private RegisterModel _model = new();
+    private bool _isSubmitting;
+
+    private async Task HandleSubmit()
+    {
+        _isSubmitting = true;
+
+        try
+        {
+            var member = new Member
+            {
+                FirstName = _model.FirstName,
+                LastName = _model.LastName,
+                Email = _model.Email,
+                PhoneNumber = _model.PhoneNumber,
+                PersonalIdentityNumber = _model.PersonalIdentityNumber,
+                Status = MembershipStatus.Pending,
+                College = _model.College ?? College.NisamStudent,
+                DateOfBirth = _model.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
+                Gender = _model.Gender
+            };
+            var newMember = await MembersService.AddMember(member);
+            CurrentUserService.SetCurrentUser(newMember.Id);
+            NavigationManager.NavigateTo($"/profile/{newMember.Id}");
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+
+    private sealed class RegisterModel
+    {
+        [Required(ErrorMessage = "Ime je obavezno.")]
+        [MaxLength(100)]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Prezime je obavezno.")]
+        [MaxLength(100)]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email je obavezan.")]
+        [EmailAddress(ErrorMessage = "Unesite ispravan email.")]
+        [MaxLength(255)]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Broj telefona je obavezan.")]
+        [MaxLength(30)]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "OIB je obavezan.")]
+        [OIB(ErrorMessage = "Unesite ispravan OIB.")]
+        public string PersonalIdentityNumber { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Fakultet je obavezan.")]
+        public College? College { get; set; }
+
+        [Required(ErrorMessage = "Datum rođenja je obavezan.")]
+        public DateOnly? DateOfBirth { get; set; }
+
+        public Gender Gender { get; set; }
+    }
+
+}

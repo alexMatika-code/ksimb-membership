@@ -1,0 +1,169 @@
+﻿@page "/admin/members/{AdminId:guid}"
+
+@using ksimb_membership.Modules.Members
+
+<PageTitle>Članovi</PageTitle>
+
+@if (_currentMember is not null && _currentMember.IsAdmin)
+{
+    <div class="container py-4">
+
+        <div class="mb-4">
+            <h1 class="h3 fw-bold mb-1">
+                Članovi
+            </h1>
+
+            <p class="text-secondary mb-0">
+                Pregled i upravljanje članovima.
+            </p>
+        </div>
+
+        <div class="mb-4">
+            <div class="input-group input-group-lg">
+            <span class="input-group-text bg-white">
+                <i class="ph ph-magnifying-glass"></i>
+            </span>
+
+                <input
+                    class="form-control"
+                    placeholder="Pretraži po imenu..."
+                    @bind="_searchTerm"
+                    @bind:event="oninput"/>
+            </div>
+        </div>
+
+        @if (_members is null)
+        {
+            <div class="text-center py-5">
+                <div class="spinner-border"></div>
+            </div>
+        }
+        else if (!_filteredMembers.Any())
+        {
+            <div class="text-center py-5 text-secondary">
+                <i class="ph ph-users-three fs-1 d-block mb-3"></i>
+
+                <p class="mb-0">
+                    Nema članova koji odgovaraju pretrazi.
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="members-list">
+
+                @foreach (var member in _filteredMembers)
+                {
+                    <div class="member-row" @onclick="@(() => NavigationManager.NavigateTo($"profile/{member.Id}"))">
+
+                        <div class="member-info">
+                            <i class="ph ph-identification-card member-icon"></i>
+
+                            <div class="member-details">
+                                <div class="member-name">
+                                    @member.FullName
+                                </div>
+
+                                <div class="member-oib">
+                                    @member.PersonalIdentityNumber
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="member-status">
+
+                            @if (member.Status == MembershipStatus.Pending)
+                            {
+                                <button
+                                    class="btn btn-outline-success btn-sm"
+                                    @onclick="() => ApproveMember(member)"
+                                    disabled="@_approvingIds.Contains(member.Id)">
+
+                                    @if (_approvingIds.Contains(member.Id))
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                    }
+                                    else
+                                    {
+                                        <i class="ph ph-check me-1"></i>
+                                    }
+                                    Odobri
+                                </button>
+                            }
+                            else if (member.Status == MembershipStatus.Active)
+                            {
+                                <span class="badge text-bg-success">
+                                Aktivan
+                            </span>
+                            }
+                            else
+                            {
+                                <span class="badge text-bg-danger">
+                                Odbijen
+                            </span>
+                            }
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+}
+
+
+@code {
+
+    [Parameter] public Guid AdminId { get; set; }
+
+    [Inject] private IMembersService MembersService { get; set; } = null!;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    private List<Member>? _members;
+
+    private Member? _currentMember;
+
+    private string _searchTerm = string.Empty;
+
+    private readonly HashSet<Guid> _approvingIds = [];
+
+    private IEnumerable<Member> _filteredMembers =>
+        _members?
+            .Where(x =>
+                string.IsNullOrWhiteSpace(_searchTerm) ||
+                x.FullName.Contains(
+                    _searchTerm,
+                    StringComparison.OrdinalIgnoreCase))
+        ?? Enumerable.Empty<Member>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _members = await MembersService.GetAllMembers();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _currentMember = await MembersService.GetMemberById(AdminId);
+    }
+
+    private async Task ApproveMember(Member member)
+    {
+        _approvingIds.Add(member.Id);
+
+        try
+        {
+            await MembersService.UpdateMembership(member.Id, MembershipStatus.Active);
+
+            member.Status = MembershipStatus.Active;
+        }
+        finally
+        {
+            _approvingIds.Remove(member.Id);
+        }
+    }
+
+}

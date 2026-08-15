@@ -1,0 +1,75 @@
+﻿@page "/"
+
+<PageTitle>KSIMB</PageTitle>
+
+<div class="landing-page mh-100 h-100">
+    
+    <div class="landing-content h-100">
+
+        <div class="brand">
+            <img class="brand-mark" src="ksimb_logo.svg" alt="logo"/>
+
+            <div class="brand-name">
+                KSIMB
+            </div>
+        </div>
+
+        <div class="hero">
+
+            <div class="hero-badge">
+                <i class="ph ph-users-three"></i>
+                Članstvo
+            </div>
+
+            <h1>
+                Budi dio kluba studenata Istre<br/>
+                <span> Mate Balota</span>
+            </h1>
+
+            <p>
+                Pridruži se klubu, upoznaj nove ljude
+                i postani dio naše zajednice.
+            </p>
+
+        </div>
+
+        <div class="landing-actions">
+
+            <button class="btn landing-primary primary-button"
+                    @onclick="GoToLogin">
+                <span>Prijavi se</span>
+                <i class="ph ph-arrow-right"></i>
+            </button>
+
+            <button class="btn secondary-button landing-secondary"
+                    @onclick="GoToRegister">
+                <span>Postani član</span>
+                <i class="ph ph-user-plus"></i>
+            </button>
+
+        </div>
+
+        <div class="landing-footer">
+            <i class="ph ph-map-pin"></i>
+            Zagreb, Ilica 13
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    private void GoToRegister()
+    {
+        NavigationManager.NavigateTo("/register");
+    }
+
+    private void GoToLogin()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+
+}

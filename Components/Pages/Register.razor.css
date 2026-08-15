@@ -1,0 +1,27 @@
+﻿.register-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.register-card .form-label {
+    font-weight: 500;
+}
+
+.register-card .form-control,
+.register-card .form-select {
+    border-radius: 12px;
+}
+
+.register-card .btn {
+    min-height: 56px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.validation-message {
+    color: var(--bs-danger);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}

@@ -1,0 +1,141 @@
+﻿@page "/login"
+
+@using System.ComponentModel.DataAnnotations
+@using ksimb_membership.Modules
+@using ksimb_membership.Modules.Members
+
+<PageTitle>Prijava</PageTitle>
+
+<div class="h-100 w-100 d-flex justify-content-center align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-7 col-lg-5">
+
+                <div class="login-card">
+
+                    <div class="text-center mb-4">
+                        <div class="login-icon mb-3">
+                            <i class="ph ph-user"></i>
+                        </div>
+
+                        <h1 class="h3 fw-bold mb-2">
+                            Prijavi se
+                        </h1>
+
+                        <p class="text-secondary mb-0">
+                            Unesi svoj OIB za pristup profilu.
+                        </p>
+                    </div>
+
+                    <EditForm Model="_model" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator/>
+
+                        <div class="mb-4">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text">
+                                    <i class="ph ph-identification-card"></i>
+                                </span>
+
+                                <InputText
+                                    id="oib"
+                                    class="form-control"
+                                    maxlength="11"
+                                    inputmode="numeric"
+                                    autocomplete="off"
+                                    @bind-Value="_model.Oib"/>
+                            </div>
+
+                            <ValidationMessage For="@(() => _model.Oib)"/>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                        {
+                            <div class="alert alert-danger d-flex align-items-center gap-2">
+                                <i class="ph ph-warning-circle"></i>
+                                <span>@_errorMessage</span>
+                            </div>
+                        }
+
+                        <button
+                            type="submit"
+                            class="btn primary-button btn-lg w-100"
+                            disabled="@_isSubmitting">
+
+                            @if (_isSubmitting)
+                            {
+                                <span
+                                    class="spinner-border spinner-border-sm me-2">
+                                </span>
+
+                                <span>Prijava...</span>
+                            }
+                            else
+                            {
+                                <span>Prijavi se</span>
+                            }
+                        </button>
+
+                    </EditForm>
+
+                    <div class="text-center mt-4">
+                        <span class="text-secondary">
+                            Nisi član?
+                        </span>
+
+                        <a href ="@PageRoutes.Register"
+                           class="text-decoration-none fw-semibold">
+                            Učlani se
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Inject] private IMembersService MembersService { get; set; } = null!;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    [Inject] private ICurrentUserService CurrentUserService { get; set; } = null!;
+    
+    private LoginModel _model = new();
+
+    private bool _isSubmitting;
+    private string? _errorMessage;
+
+    private async Task HandleSubmit()
+    {
+        _errorMessage = null;
+        _isSubmitting = true;
+
+        try
+        {
+            var member = await MembersService.GetMemberByPersonalId(_model.Oib);
+
+            if (member is null)
+            {
+                _errorMessage = "Član s unesenim OIB-om nije pronađen.";
+                return;
+            }
+
+            CurrentUserService.SetCurrentUser(member.Id);
+            NavigationManager.NavigateTo($"profile/{member.Id}");
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+
+    private sealed class LoginModel
+    {
+        [Required(ErrorMessage = "OIB je obavezan.")]
+        [OIB(ErrorMessage = "Unesite ispravan OIB.")]
+        public string Oib { get; set; } = string.Empty;
+    }
+
+}

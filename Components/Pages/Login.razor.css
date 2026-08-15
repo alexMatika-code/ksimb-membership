@@ -1,0 +1,43 @@
+﻿.login-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.login-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eef2ff;
+    color: var(--bs-primary);
+
+    font-size: 2rem;
+}
+
+.login-card .form-control,
+.login-card .input-group-text {
+    border-radius: 12px;
+}
+
+.login-card .input-group .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.login-card .input-group-text {
+    background: #f8f9fa;
+}
+
+.login-card .btn {
+    min-height: 56px;
+    border-radius: 12px;
+    font-weight: 600;
+}
