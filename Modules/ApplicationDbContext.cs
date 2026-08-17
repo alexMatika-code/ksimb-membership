@@ -1,4 +1,5 @@
 ﻿using ksimb_membership.Modules.Members;
+using ksimb_membership.Modules.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace ksimb_membership.Modules;
@@ -6,6 +7,8 @@ namespace ksimb_membership.Modules;
 public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<Member> Members => Set<Member>();
+    
+    public DbSet<SecuritySettings> SecuritySettings => Set<SecuritySettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,6 +52,15 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             entity.Property(x => x.IsAdmin);
             
             entity.Property(x => x.CreatedAt);
+        });
+        
+        modelBuilder.Entity<SecuritySettings>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.AdminSecretHash)
+                .IsRequired()
+                .HasMaxLength(500);
         });
     }
 }

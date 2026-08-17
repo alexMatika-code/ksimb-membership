@@ -1,6 +1,9 @@
 ﻿@page "/admin/members/{AdminId:guid}"
-
+@using Microsoft.AspNetCore.Authorization
 @using ksimb_membership.Modules.Members
+
+@attribute [Authorize(Roles = "Admin")]
+
 
 <PageTitle>Članovi</PageTitle>
 
@@ -8,14 +11,26 @@
 {
     <div class="container py-4">
 
-        <div class="mb-4">
-            <h1 class="h3 fw-bold mb-1">
-                Članovi
-            </h1>
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div>
+                <h1 class="h3 fw-bold mb-1">
+                    Članovi
+                </h1>
 
-            <p class="text-secondary mb-0">
-                Pregled i upravljanje članovima.
-            </p>
+                <p class="text-secondary mb-0">
+                    Pregled i upravljanje članovima.
+                </p>
+            </div>
+
+            <button class="btn btn-outline-primary"
+                    @onclick="ExportMembers">
+
+                <i class="ph ph-file-xls me-1"></i>
+
+                <span class="d-none d-sm-inline">
+                    Export
+                </span>
+            </button>
         </div>
 
         <div class="mb-4">
@@ -54,7 +69,8 @@
 
                 @foreach (var member in _filteredMembers)
                 {
-                    <div class="member-row" @onclick="@(() => NavigationManager.NavigateTo($"profile/{member.Id}"))">
+                    <div class="member-row"
+                         @onclick="@(() => NavigationManager.NavigateTo($"profile/{member.Id}"))">
 
                         <div class="member-info">
                             <i class="ph ph-identification-card member-icon"></i>
@@ -131,6 +147,8 @@
 
     private readonly HashSet<Guid> _approvingIds = [];
 
+    private bool _isExporting;
+
     private IEnumerable<Member> _filteredMembers =>
         _members?
             .Where(x =>
@@ -166,4 +184,19 @@
         }
     }
 
+    private async Task ExportMembers()
+    {
+        _isExporting = true;
+
+        try
+        {
+            NavigationManager.NavigateTo(
+                "/admin/members/export",
+                forceLoad: true);
+        }
+        finally
+        {
+            _isExporting = false;
+        }
+    }
 }

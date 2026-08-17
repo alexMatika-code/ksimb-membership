@@ -1,0 +1,65 @@
+﻿@page "/security-check/{MemberId:guid}"
+
+<PageTitle>Sigurnosna provjera</PageTitle>
+
+<div class="security-page">
+    <div class="security-card">
+
+        <div class="security-icon">
+            <i class="ph ph-shield-check"></i>
+        </div>
+
+        <h1>Sigurnosna provjera</h1>
+
+        <p class="text-secondary">
+            Za nastavak je potrebna dodatna potvrda identiteta.
+        </p>
+
+        <form method="post"
+              action="/auth/admin-sign-in"
+              data-enhance="false">
+            
+            <AntiforgeryToken/>
+
+            <input type="hidden"
+                   name="MemberId"
+                   value="@MemberId"/>
+
+            <div class="mb-4">
+                <label for="secret" class="form-label">
+                    Sigurnosni kod
+                </label>
+
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text">
+                        <i class="ph ph-key"></i>
+                    </span>
+
+                    <input id="secret"
+                           name="Secret"
+                           type="password"
+                           class="form-control"
+                           placeholder="Otvori se sezame"
+                           autocomplete="off"
+                           required/>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="btn primary-button btn-lg w-100">
+
+                <i class="ph ph-arrow-right me-2"></i>
+                Nastavi
+
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public Guid MemberId { get; set; }
+
+}
