@@ -23,7 +23,7 @@ public sealed class Member
 
     public MembershipStatus Status { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public Gender Gender { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿@page "/profile/{MemberId:guid}"
 
 @using System.Security.Claims
+@using Humanizer
 @using ksimb_membership.Components.Components
 @using ksimb_membership.Modules
 @using ksimb_membership.Modules.Members
@@ -106,7 +107,7 @@
                                     </div>
 
                                     <div class="profile-info-value">
-                                        @_member.College
+                                        @_member.College.Humanize()
                                     </div>
                                 </div>
                             </div>

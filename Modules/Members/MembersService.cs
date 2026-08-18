@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace ksimb_membership.Modules.Members;
@@ -66,7 +65,6 @@ internal sealed class MembersService(
 
         await using var context = await dbContextFactory.CreateDbContextAsync();
 
-        member.CreatedAt = DateTime.Now;
         context.Members.Add(member);
         await context.SaveChangesAsync();
         return member;

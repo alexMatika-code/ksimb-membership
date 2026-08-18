@@ -22,7 +22,7 @@
                 </p>
             </div>
 
-            <button class="btn btn-outline-primary"
+            <button class="btn btn-outline-primary d-flex align-items-center justify-content-center"
                     @onclick="ExportMembers">
 
                 <i class="ph ph-file-xls me-1"></i>
@@ -53,7 +53,7 @@
                 <div class="spinner-border"></div>
             </div>
         }
-        else if (!_filteredMembers.Any())
+        else if (!FilteredMembers.Any())
         {
             <div class="text-center py-5 text-secondary">
                 <i class="ph ph-users-three fs-1 d-block mb-3"></i>
@@ -67,7 +67,7 @@
         {
             <div class="members-list">
 
-                @foreach (var member in _filteredMembers)
+                @foreach (var member in FilteredMembers)
                 {
                     <div class="member-row"
                          @onclick="@(() => NavigationManager.NavigateTo($"profile/{member.Id}"))">
@@ -88,10 +88,11 @@
 
                         <div class="member-status">
 
-                            @if (member.Status == MembershipStatus.Pending)
+                            @if (member.Status is MembershipStatus.Pending)
                             {
                                 <button
                                     class="btn btn-outline-success btn-sm"
+                                    @onclick:stopPropagation
                                     @onclick="() => ApproveMember(member)"
                                     disabled="@_approvingIds.Contains(member.Id)">
 
@@ -106,7 +107,7 @@
                                     Odobri
                                 </button>
                             }
-                            else if (member.Status == MembershipStatus.Active)
+                            else if (member.Status is MembershipStatus.Active)
                             {
                                 <span class="badge text-bg-success">
                                 Aktivan
@@ -149,7 +150,7 @@
 
     private bool _isExporting;
 
-    private IEnumerable<Member> _filteredMembers =>
+    private IEnumerable<Member> FilteredMembers =>
         _members?
             .Where(x =>
                 string.IsNullOrWhiteSpace(_searchTerm) ||
