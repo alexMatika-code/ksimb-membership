@@ -8,6 +8,14 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this WebApplication app)
     {
+            app.MapGet("/auth/sign-out",
+                async (HttpContext httpContext) =>
+                {
+                    await httpContext.SignOutAsync("KsimbAuth");
+
+                    return Results.Redirect("/login");
+                });
+
         app.MapPost("/auth/admin-sign-in",
             async (
                 HttpContext httpContext,
@@ -65,5 +73,4 @@ public static class AuthEndpoints
                     $"/profile/{member.Id}");
             });
     }
-
 }

@@ -3,7 +3,6 @@
 @using System.Security.Claims
 @using Humanizer
 @using ksimb_membership.Components.Components
-@using ksimb_membership.Modules
 @using ksimb_membership.Modules.Members
 @using Microsoft.AspNetCore.Components.Authorization
 
@@ -42,6 +41,12 @@
                             <span class="@GetStatusClass(_member.Status) p-2">
                                 @GetStatusText(_member.Status)
                             </span>
+                            @if (_member.Status is MembershipStatus.Pending)
+                            {
+                                <div class="mt-2 border-warning-subtle">
+                                    Javi nam se u klubu za potvrdu članstva
+                                </div>
+                            }
                         </div>
 
                         <hr class="my-4"/>
