@@ -64,7 +64,8 @@ internal sealed class MembersService(
         }
 
         await using var context = await dbContextFactory.CreateDbContextAsync();
-
+        
+        member.BirthPlace = member.BirthPlace.Trim().ToLower();
         context.Members.Add(member);
         await context.SaveChangesAsync();
         return member;
@@ -97,6 +98,7 @@ internal sealed class MembersService(
         if (member.Status is MembershipStatus.Active)
         {
             member.ApproverId = adminId;
+            member.ApprovedAt = DateTimeOffset.Now;
         }
 
         context.Members.Update(member);
@@ -142,6 +144,7 @@ internal sealed class MembersService(
         worksheet.Cell(1, 5).Value = "Telefon";
         worksheet.Cell(1, 6).Value = "Fakultet";
         worksheet.Cell(1, 7).Value = "Datum rođenja";
+        worksheet.Cell(1, 8).Value = "Prebivalište";
 
         var row = 2;
 
@@ -155,6 +158,7 @@ internal sealed class MembersService(
             worksheet.Cell(row, 6).Value = member.College.ToString();
             worksheet.Cell(row, 7).Value =
                 member.DateOfBirth.ToString("dd.MM.yyyy.");
+            worksheet.Cell(row, 8).Value = member.BirthPlace;
 
             row++;
         }

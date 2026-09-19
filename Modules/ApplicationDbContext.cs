@@ -39,10 +39,12 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
                 .HasMaxLength(20);
 
             entity.Property(x => x.College)
-                .IsRequired()
-                .HasConversion<string>();
+                .IsRequired();
 
             entity.Property(x => x.DateOfBirth)
+                .IsRequired();
+            
+            entity.Property(x => x.BirthPlace)
                 .IsRequired();
 
             entity.Property(x => x.Status);
@@ -52,7 +54,9 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             entity.Property(x => x.IsAdmin);
 
             entity.Property(x => x.CreatedAt);
+            
             entity.Property(x => x.ApproverId);
+            entity.Property(x => x.ApprovedAt);
         });
 
         modelBuilder.Entity<SecuritySettings>(entity =>

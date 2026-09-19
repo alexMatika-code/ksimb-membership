@@ -1,5 +1,6 @@
 ﻿@page "/profile/{MemberId:guid}"
 
+@using System.Globalization
 @using System.Security.Claims
 @using Humanizer
 @using ksimb_membership.Components.Components
@@ -92,23 +93,6 @@
                                 </div>
                             </div>
 
-                            @* OIB *@
-                            <div class="profile-info-item">
-                                <div class="profile-info-icon">
-                                    <i class="ph ph-identification-card"></i>
-                                </div>
-
-                                <div>
-                                    <div class="profile-info-label">
-                                        OIB
-                                    </div>
-
-                                    <div class="profile-info-value">
-                                        @_member.PersonalIdentityNumber
-                                    </div>
-                                </div>
-                            </div>
-
                             @* FAKULTET *@
                             <div class="profile-info-item">
                                 <div class="profile-info-icon">
@@ -143,6 +127,25 @@
                                 </div>
                             </div>
 
+                            @* PREBIVALIŠTE *@
+                            <div class="profile-info-item">
+                                <div class="profile-info-icon">
+                                    <i class="ph ph-house-line"></i>
+                                </div>
+
+                                <div>
+                                    <div class="profile-info-label">
+                                        Prebivalište
+                                    </div>
+
+                                    <div class="profile-info-value">
+                                        @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(
+                                            _member.BirthPlace
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+
                             @* ODOBRIO ČLANSTVO *@
                             @if (_member.ApproverId.HasValue)
                             {
@@ -157,8 +160,16 @@
                                         </div>
 
                                         <div class="profile-info-value">
-                                            @(_approver?.FullName ?? "Nepoznato")
+                                            <span>@(_approver?.FullName ?? "Nepoznato")</span>
+
+                                            @if (_member.ApprovedAt.HasValue)
+                                            {
+                                                <span class="text-muted small">
+                                                    · @_member.ApprovedAt.Value.ToString("dd.MM.yyyy. HH:mm")
+                                                </span>
+                                            }
                                         </div>
+
                                     </div>
                                 </div>
                             }

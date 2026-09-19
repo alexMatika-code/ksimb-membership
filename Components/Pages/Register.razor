@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6">
-                
+
                 <div class="register-card">
 
                     <div class="mb-4">
@@ -101,17 +101,25 @@
                             <InputSelect
                                 id="college"
                                 class="form-select form-select-lg"
-                                @bind-Value="_model.College">
+                                @bind-Value="_selectedCollege">
 
                                 <option value="">Odaberi fakultet</option>
 
                                 @foreach (var college in Enum.GetValues<College>())
                                 {
-                                    <option value="@college" class="form">
+                                    <option value="@college">
                                         @college.Humanize()
                                     </option>
                                 }
                             </InputSelect>
+
+                            @if (_selectedCollege == College.Drugo)
+                            {
+                                <InputText
+                                    class="form-control form-control-lg mt-2"
+                                    placeholder="Upiši fakultet"
+                                    @bind-Value="_model.College"/>
+                            }
 
                             <ValidationMessage For="@(() => _model.College)"/>
                         </div>
@@ -146,6 +154,19 @@
                                 @bind-Value="_model.DateOfBirth"/>
 
                             <ValidationMessage For="@(() => _model.DateOfBirth)"/>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="birthPlace" class="form-label">
+                                Otkud si (općina/grad)
+                            </label>
+
+                            <InputText
+                                id="birthPlace"
+                                class="form-control form-control-lg"
+                                @bind-Value="_model.BirthPlace"/>
+
+                            <ValidationMessage For="@(() => _model.BirthPlace)"/>
                         </div>
 
                         <button
@@ -189,6 +210,21 @@
     private RegisterModel _model = new();
     private bool _isSubmitting;
 
+    private College? _selectedCollege;
+
+    private void UpdateCollege()
+    {
+        if (_selectedCollege is not null &&
+            _selectedCollege != College.Drugo)
+        {
+            _model.College = _selectedCollege.Value.Humanize();
+        }
+        else
+        {
+            _model.College = string.Empty;
+        }
+    }
+
     private async Task HandleSubmit()
     {
         _isSubmitting = true;
@@ -203,9 +239,10 @@
                 PhoneNumber = _model.PhoneNumber,
                 PersonalIdentityNumber = _model.PersonalIdentityNumber,
                 Status = MembershipStatus.Pending,
-                College = _model.College ?? College.NisamStudent,
+                College = _model.College,
                 DateOfBirth = _model.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
-                Gender = _model.Gender
+                Gender = _model.Gender,
+                BirthPlace = _model.BirthPlace
             };
             var newMember = await MembersService.AddMember(member);
             CurrentUserService.SetCurrentUser(newMember.Id);
@@ -241,10 +278,13 @@
         public string PersonalIdentityNumber { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Fakultet je obavezan.")]
-        public College? College { get; set; }
+        public string College { get; set; }
 
         [Required(ErrorMessage = "Datum rođenja je obavezan.")]
         public DateOnly? DateOfBirth { get; set; }
+
+        [Required(ErrorMessage = "Općina/Grad iz koje dolaziš je obavezna.")]
+        public string BirthPlace { get; set; }
 
         public Gender Gender { get; set; }
     }

@@ -17,7 +17,9 @@ public sealed class Member
     //OIB
     public required string PersonalIdentityNumber { get; set; }
 
-    public College College { get; set; }
+    public required string BirthPlace { get; set; }
+    
+    public string College { get; set; }
 
     public DateOnly DateOfBirth { get; set; }
 
@@ -30,6 +32,8 @@ public sealed class Member
     public bool IsAdmin { get; set; }
     
     public Guid? ApproverId { get; set; }
+    
+    public DateTimeOffset? ApprovedAt { get; set; }
 }
 
 public enum College
@@ -66,7 +70,7 @@ public enum College
     ADU,
     ALU,
     MUZA,
-    Furešto
+    Drugo
 }
 
 public enum Gender
