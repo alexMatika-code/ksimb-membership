@@ -37,19 +37,22 @@ public static class AuthEndpoints
 
                 if (member is null)
                 {
-                    return Results.Problem("MEMBER_NOT_FOUND", statusCode: 401);
+                    return Results.Redirect(
+                        "/login");
                 }
 
                 if (!member.IsAdmin)
                 {
-                    return Results.Problem("MEMBER_NOT_ADMIN", statusCode: 403);
+                    return Results.Redirect(
+                        "login");
                 }
 
                 var valid = await securityService.VerifyAdminSecret(secret);
 
                 if (!valid)
                 {
-                    return Results.Problem("INVALID_ADMIN_SECRET", statusCode: 401);
+                    return Results.Redirect(
+                        $"/security-check/{member.Id}");
                 }
 
                 var claims = new List<Claim>
