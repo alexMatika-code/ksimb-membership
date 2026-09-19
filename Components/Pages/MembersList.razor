@@ -175,7 +175,7 @@
 
         try
         {
-            await MembersService.UpdateMembership(member.Id, MembershipStatus.Active);
+            await MembersService.UpdateMembership(member.Id, MembershipStatus.Active, AdminId);
 
             member.Status = MembershipStatus.Active;
         }

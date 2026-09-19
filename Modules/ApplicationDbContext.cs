@@ -7,7 +7,7 @@ namespace ksimb_membership.Modules;
 public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<Member> Members => Set<Member>();
-    
+
     public DbSet<SecuritySettings> SecuritySettings => Set<SecuritySettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,10 +50,11 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             entity.Property(x => x.Gender);
 
             entity.Property(x => x.IsAdmin);
-            
+
             entity.Property(x => x.CreatedAt);
+            entity.Property(x => x.ApproverId);
         });
-        
+
         modelBuilder.Entity<SecuritySettings>(entity =>
         {
             entity.HasKey(x => x.Id);

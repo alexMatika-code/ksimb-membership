@@ -64,8 +64,8 @@
 
     border-radius: 999px;
 
-    background: rgba(13, 110, 253, 0.08);
-    color: #0d6efd;
+    background: rgba(6, 78, 59, 0.08);
+    color: #064e3b;
 
     font-size: 0.8rem;
     font-weight: 600;
@@ -86,7 +86,7 @@
 }
 
 .hero h1 span {
-    color: #0d6efd;
+    color: #064e3b;
 }
 
 .hero p {
@@ -160,14 +160,14 @@
     top: -150px;
     right: -120px;
 
-    background: rgba(13, 110, 253, 0.12);
+    background: rgba(6, 78, 59, 0.12);
 }
 
 .landing-decoration-2 {
     bottom: -150px;
     left: -120px;
 
-    background: rgba(111, 66, 193, 0.10);
+    background: rgba(18, 53, 36, 0.10);
 }
 
 .social-link {

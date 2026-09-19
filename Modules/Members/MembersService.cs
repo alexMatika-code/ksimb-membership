@@ -13,9 +13,9 @@ public interface IMembersService
 
     public Task<Member> AddMember(Member member);
 
-    public Task<Guid?> DeleteMember(Guid id);
+    public Task<Guid?> DeleteMember(Guid id, Guid? adminId);
 
-    public Task<Member?> UpdateMembership(Guid id, MembershipStatus membershipStatus);
+    public Task<Member?> UpdateMembership(Guid id, MembershipStatus membershipStatus, Guid? adminId);
 
     public Task<Member?> UpdateAdminStatus(Guid id, bool status);
 
@@ -28,7 +28,7 @@ internal sealed class MembersService(
     public async Task<List<Member>> GetAllMembers()
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
-        return await context.Members.ToListAsync();
+        return await context.Members.OrderBy(e => e.FirstName).ToListAsync();
     }
 
     public async Task<Member?> GetMemberById(Guid id)
@@ -37,7 +37,7 @@ internal sealed class MembersService(
         var member = await context.Members.FirstOrDefaultAsync(e => e.Id == id);
         if (member is not null && member.CreatedAt < DateTime.Now.AddYears(-1))
         {
-            member = await UpdateMembership(member.Id, MembershipStatus.Denied);
+            member = await UpdateMembership(member.Id, MembershipStatus.Denied, null);
         }
 
         return member;
@@ -49,7 +49,7 @@ internal sealed class MembersService(
         var member = await context.Members.FirstOrDefaultAsync(e => e.PersonalIdentityNumber == oib);
         if (member is not null && member.CreatedAt < DateTime.Now.AddYears(-1))
         {
-            member = await UpdateMembership(member.Id, MembershipStatus.Denied);
+            member = await UpdateMembership(member.Id, MembershipStatus.Denied, null);
         }
 
         return member;
@@ -70,7 +70,7 @@ internal sealed class MembersService(
         return member;
     }
 
-    public async Task<Guid?> DeleteMember(Guid id)
+    public async Task<Guid?> DeleteMember(Guid id, Guid? adminId)
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
         var member = await GetMemberById(id);
@@ -84,7 +84,7 @@ internal sealed class MembersService(
         return member.Id;
     }
 
-    public async Task<Member?> UpdateMembership(Guid id, MembershipStatus membershipStatus)
+    public async Task<Member?> UpdateMembership(Guid id, MembershipStatus membershipStatus, Guid? adminId)
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
         var member = await GetMemberById(id);
@@ -94,6 +94,11 @@ internal sealed class MembersService(
         }
 
         member.Status = membershipStatus;
+        if (member.Status is MembershipStatus.Active)
+        {
+            member.ApproverId = adminId;
+        }
+
         context.Members.Update(member);
         await context.SaveChangesAsync();
 
@@ -137,7 +142,7 @@ internal sealed class MembersService(
         worksheet.Cell(1, 5).Value = "Telefon";
         worksheet.Cell(1, 6).Value = "Fakultet";
         worksheet.Cell(1, 7).Value = "Datum rođenja";
-        
+
         var row = 2;
 
         foreach (var member in members)

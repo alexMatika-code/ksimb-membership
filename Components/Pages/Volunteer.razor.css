@@ -1,0 +1,771 @@
+.volunteers-page {
+    min-height: 100vh;
+}
+
+
+/* ================================= */
+/* HERO                              */
+/* ================================= */
+
+.volunteer-hero {
+    padding: 80px 0 70px;
+}
+
+.volunteer-hero-content {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.volunteer-hero-icon {
+    width: 72px;
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 20px;
+
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+
+    font-size: 36px;
+}
+
+.volunteer-eyebrow,
+.section-eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    color: var(--bs-primary);
+}
+
+.volunteer-hero h1 {
+    margin-bottom: 18px;
+
+    font-size: clamp(2.2rem, 5vw, 3.7rem);
+    font-weight: 800;
+
+    line-height: 1.05;
+}
+
+.volunteer-hero-description {
+    max-width: 680px;
+    margin: 0 auto;
+
+    font-size: 1.05rem;
+    line-height: 1.7;
+
+    color: var(--bs-secondary-color);
+}
+
+
+/* ================================= */
+/* SECTIONS                          */
+/* ================================= */
+
+.volunteer-section {
+    padding: 65px 0;
+}
+
+.volunteer-section-alt {
+    background: var(--bs-tertiary-bg);
+}
+
+.section-heading {
+    max-width: 650px;
+    margin-bottom: 35px;
+}
+
+.section-heading.text-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-heading h2 {
+    margin-bottom: 10px;
+
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    font-weight: 750;
+}
+
+.section-heading p {
+    margin-bottom: 0;
+
+    line-height: 1.65;
+
+    color: var(--bs-secondary-color);
+}
+
+
+/* ================================= */
+/* BENEFITS                          */
+/* ================================= */
+
+.benefit-card {
+    height: 100%;
+
+    padding: 24px;
+
+    border: 1px solid var(--bs-border-color);
+    border-radius: 18px;
+
+    background: var(--bs-body-bg);
+}
+
+.benefit-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 13px;
+
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+
+    font-size: 24px;
+}
+
+.benefit-card h3 {
+    margin-bottom: 8px;
+
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.benefit-card p {
+    margin: 0;
+
+    font-size: 0.92rem;
+    line-height: 1.6;
+
+    color: var(--bs-secondary-color);
+}
+
+
+/* ================================= */
+/* ROLES                             */
+/* ================================= */
+
+.volunteer-roles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.role-card {
+    position: relative;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    padding: 24px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--bs-border-color);
+    border-radius: 18px;
+
+    background: var(--bs-body-bg);
+}
+
+.role-icon {
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+
+    font-size: 22px;
+}
+
+.role-content {
+    position: relative;
+    z-index: 1;
+}
+
+.role-content h3 {
+    margin-bottom: 7px;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.role-content p {
+    margin: 0;
+
+    font-size: 0.9rem;
+    line-height: 1.6;
+
+    color: var(--bs-secondary-color);
+}
+
+
+/* ================================= */
+/* GALLERY                           */
+/* ================================= */
+
+/* ================================= */
+/* GALLERY                           */
+/* ================================= */
+
+.volunteer-gallery-categories {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+
+/* CARD */
+
+.gallery-category-card {
+    min-width: 0;
+    padding: 16px;
+
+    border: 1px solid var(--bs-border-color);
+    border-radius: 18px;
+
+    background: var(--bs-body-bg);
+
+    overflow: hidden;
+}
+
+
+/* HEADER */
+
+.gallery-category-header {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.gallery-category-icon {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+
+    font-size: 22px;
+}
+
+.gallery-category-header h3 {
+    margin: 0 0 3px;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.gallery-category-header p {
+    margin: 0;
+
+    font-size: 0.82rem;
+    line-height: 1.45;
+
+    color: var(--bs-secondary-color);
+}
+
+
+/* ================================= */
+/* MAIN IMAGE                        */
+/* ================================= */
+
+.gallery-image-wrapper {
+    position: relative;
+
+    width: 100%;
+    aspect-ratio: 4 / 3;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background: var(--bs-tertiary-bg);
+}
+
+.gallery-main-image {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* ================================= */
+/* LEFT / RIGHT BUTTONS              */
+/* ================================= */
+
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.9);
+    color: #212529;
+
+    font-size: 21px;
+
+    transform: translateY(-50%);
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+
+    z-index: 2;
+
+    cursor: pointer;
+}
+
+.gallery-nav-left {
+    left: 10px;
+}
+
+.gallery-nav-right {
+    right: 10px;
+}
+
+.gallery-nav:active {
+    transform:
+            translateY(-50%)
+            scale(0.93);
+}
+
+
+/* ================================= */
+/* COUNTER                           */
+/* ================================= */
+
+.gallery-counter {
+    position: absolute;
+
+    left: 50%;
+    bottom: 10px;
+
+    padding: 5px 11px;
+
+    border-radius: 999px;
+
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    transform: translateX(-50%);
+
+    backdrop-filter: blur(5px);
+}
+
+
+/* ================================= */
+/* THUMBNAILS                        */
+/* ================================= */
+
+.gallery-thumbnails {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 10px;
+    padding-bottom: 2px;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.gallery-thumbnails::-webkit-scrollbar {
+    display: none;
+}
+
+.gallery-thumbnail {
+    width: 68px;
+    height: 52px;
+
+    flex: 0 0 68px;
+
+    padding: 2px;
+
+    overflow: hidden;
+
+    border: 2px solid transparent;
+    border-radius: 10px;
+
+    background: transparent;
+
+    opacity: 0.65;
+
+    cursor: pointer;
+
+    transition:
+            opacity 0.15s ease,
+            border-color 0.15s ease,
+            transform 0.15s ease;
+}
+
+.gallery-thumbnail img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 6px;
+}
+
+.gallery-thumbnail.active {
+    border-color: var(--bs-primary);
+    opacity: 1;
+}
+
+.gallery-thumbnail:active {
+    transform: scale(0.95);
+}
+
+
+/* ================================= */
+/* TABLET                            */
+/* ================================= */
+
+@media (min-width: 768px) {
+
+    .gallery-category-card {
+        padding: 20px;
+    }
+
+    .gallery-category-icon {
+        width: 48px;
+        height: 48px;
+
+        font-size: 24px;
+    }
+
+    .gallery-category-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .gallery-category-header p {
+        font-size: 0.88rem;
+    }
+
+    .gallery-thumbnail {
+        width: 76px;
+        height: 58px;
+
+        flex-basis: 76px;
+    }
+}
+
+
+/* ================================= */
+/* DESKTOP                           */
+/* ================================= */
+
+@media (min-width: 992px) {
+
+    .volunteer-gallery-categories {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .gallery-category-card {
+        padding: 16px;
+    }
+
+    .gallery-image-wrapper {
+        aspect-ratio: 4 / 3;
+    }
+
+    .gallery-nav {
+        width: 40px;
+        height: 40px;
+    }
+
+    .gallery-category-card {
+        transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease,
+                border-color 0.15s ease;
+    }
+
+    .gallery-category-card:hover {
+        transform: translateY(-3px);
+
+        border-color:
+                rgba(var(--bs-primary-rgb), 0.3);
+
+        box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+}
+
+.volunteer-gallery {
+    display: grid;
+
+    grid-template-columns:
+        1.4fr 1fr;
+
+    grid-template-rows:
+        180px 180px;
+
+    gap: 14px;
+}
+
+.gallery-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 180px;
+
+    border: 1px dashed var(--bs-border-color);
+    border-radius: 18px;
+
+    background: var(--bs-tertiary-bg);
+
+    color: var(--bs-secondary-color);
+}
+
+.gallery-placeholder i {
+    font-size: 30px;
+}
+
+.gallery-placeholder span {
+    font-size: 0.85rem;
+}
+
+.gallery-large {
+    grid-row: span 2;
+}
+
+
+/* Kad ubaciš prave slike koristi ovo */
+
+.volunteer-gallery img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 18px;
+}
+
+
+/* ================================= */
+/* JOIN CTA                          */
+/* ================================= */
+
+.join-card {
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
+
+    padding: 30px;
+
+    border: 1px solid
+    rgba(var(--bs-primary-rgb), 0.2);
+
+    border-radius: 22px;
+
+    background:
+            rgba(var(--bs-primary-rgb), 0.05);
+}
+
+.join-icon {
+    width: 60px;
+    height: 60px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: var(--bs-primary);
+    color: white;
+
+    font-size: 29px;
+}
+
+.join-content {
+    flex: 1;
+}
+
+.join-content h2 {
+    margin-bottom: 7px;
+
+    font-size: 1.4rem;
+    font-weight: 750;
+}
+
+.join-content p {
+    max-width: 650px;
+
+    margin: 0;
+
+    color: var(--bs-secondary-color);
+}
+
+.join-action {
+    flex-shrink: 0;
+}
+
+
+/* ================================= */
+/* HOVER                             */
+/* ================================= */
+
+.benefit-card,
+.role-card {
+    transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease,
+            border-color 0.15s ease;
+}
+
+.benefit-card:hover,
+.role-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+            rgba(var(--bs-primary-rgb), 0.3);
+
+    box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ================================= */
+/* TABLET / MOBILE                   */
+/* ================================= */
+
+@media (max-width: 991px) {
+
+    .join-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .join-action {
+        width: 100%;
+    }
+
+    .join-action .btn {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 767px) {
+
+    .volunteer-hero {
+        padding: 55px 0 45px;
+    }
+
+    .volunteer-section {
+        padding: 45px 0;
+    }
+
+    .volunteer-roles {
+        grid-template-columns: 1fr;
+    }
+
+    .volunteer-gallery {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .gallery-large {
+        grid-row: auto;
+    }
+
+    .gallery-placeholder {
+        min-height: 200px;
+    }
+
+    .join-card {
+        padding: 22px;
+    }
+}
+
+
+@media (max-width: 575px) {
+
+    .volunteer-hero-icon {
+        width: 60px;
+        height: 60px;
+
+        font-size: 29px;
+    }
+
+    .role-card {
+        padding: 18px;
+    }
+
+    .benefit-card {
+        padding: 20px;
+    }
+
+    .join-icon {
+        width: 50px;
+        height: 50px;
+
+        font-size: 24px;
+    }
+}

@@ -27,7 +27,6 @@ public static class DatabaseInitializer
         await using var context =
             await contextFactory.CreateDbContextAsync();
 
-        // Ako već koristiš EnsureCreated/Migrate:
         await context.Database.MigrateAsync();
 
         var exists = await context.SecuritySettings

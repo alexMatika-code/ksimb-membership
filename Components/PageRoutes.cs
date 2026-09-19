@@ -7,4 +7,6 @@ public static class PageRoutes
     public const string Register = "/register";
 
     public const string Login = "/login";
+    
+    public const string Volunteers = "/volonteri";
 }

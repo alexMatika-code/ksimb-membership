@@ -28,6 +28,8 @@ public sealed class Member
     public Gender Gender { get; set; }
 
     public bool IsAdmin { get; set; }
+    
+    public Guid? ApproverId { get; set; }
 }
 
 public enum College

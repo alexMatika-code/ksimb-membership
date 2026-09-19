@@ -27,6 +27,10 @@
                 }
                 else
                 {
+                    @* ============================= *@
+                    @* PROFIL ČLANA                 *@
+                    @* ============================= *@
+
                     <div class="profile-card">
 
                         <div class="text-center mb-4">
@@ -41,9 +45,10 @@
                             <span class="@GetStatusClass(_member.Status) p-2">
                                 @GetStatusText(_member.Status)
                             </span>
+
                             @if (_member.Status is MembershipStatus.Pending)
                             {
-                                <div class="mt-2 border-warning-subtle">
+                                <div class="mt-2 text-secondary">
                                     Javi nam se u klubu za potvrdu članstva
                                 </div>
                             }
@@ -53,6 +58,7 @@
 
                         <div class="profile-info">
 
+                            @* EMAIL *@
                             <div class="profile-info-item">
                                 <div class="profile-info-icon">
                                     <i class="ph ph-envelope"></i>
@@ -69,6 +75,7 @@
                                 </div>
                             </div>
 
+                            @* TELEFON *@
                             <div class="profile-info-item">
                                 <div class="profile-info-icon">
                                     <i class="ph ph-phone"></i>
@@ -85,6 +92,7 @@
                                 </div>
                             </div>
 
+                            @* OIB *@
                             <div class="profile-info-item">
                                 <div class="profile-info-icon">
                                     <i class="ph ph-identification-card"></i>
@@ -101,6 +109,7 @@
                                 </div>
                             </div>
 
+                            @* FAKULTET *@
                             <div class="profile-info-item">
                                 <div class="profile-info-icon">
                                     <i class="ph ph-graduation-cap"></i>
@@ -117,6 +126,7 @@
                                 </div>
                             </div>
 
+                            @* DATUM ROĐENJA *@
                             <div class="profile-info-item">
                                 <div class="profile-info-icon">
                                     <i class="ph ph-cake"></i>
@@ -133,49 +143,193 @@
                                 </div>
                             </div>
 
-                        </div>
+                            @* ODOBRIO ČLANSTVO *@
+                            @if (_member.ApproverId.HasValue)
+                            {
+                                <div class="profile-info-item">
+                                    <div class="profile-info-icon">
+                                        <i class="ph ph-seal-check"></i>
+                                    </div>
 
+                                    <div>
+                                        <div class="profile-info-label">
+                                            Članstvo odobrio
+                                        </div>
+
+                                        <div class="profile-info-value">
+                                            @(_approver?.FullName ?? "Nepoznato")
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
                     </div>
-                    if (_isAdmin)
-                    {
-                        <div class="mt-3">
-                            <button class="btn btn-outline-primary w-100"
-                                    @onclick="@(() => NavigationManager.NavigateTo($"admin/members/{_currentUserId}"))">
-                                <i class="ph ph-users-three me-2"></i>
-                                Svi članovi
-                            </button>
-                        </div>
 
-                        if (MemberId != _currentUserId)
-                        {
-                            <div class="mt-2 d-flex align-items-center justify-content-between gap-1">
-                                @if (_member.IsAdmin)
-                                {
+
+                    @* ============================= *@
+                    @* MOGUĆNOSTI ZA ČLANOVE         *@
+                    @* ============================= *@
+
+                    @if (!_isAdmin)
+                    {
+                        <div class="member-opportunities mt-4">
+
+                            <div class="mb-3">
+                                <h3 class="h5 fw-bold mb-1">
+                                    Budi dio klupskih aktivnosti
+                                </h3>
+
+                                <p class="text-secondary small mb-0">
+                                    Osim članstva, možeš se uključiti i u druge aktivnosti kluba.
+                                </p>
+                            </div>
+
+                            <div class="profile-option-card">
+
+                                <div class="profile-option-icon">
+                                    <i class="ph ph-soccer-ball"></i>
+                                </div>
+
+                                <div class="profile-option-content">
+
+                                    <div class="profile-option-title">
+                                        Zainteresiran/a si za sportove?
+                                    </div>
+
+                                    <div class="profile-option-text">
+                                        Ako želiš zaigrati futsal s ekipom kluba,
+                                        ili imaš ideju i volju za pokretanjem neke od ostalih sportskih aktivnosti,
+                                        javi nam se na Instagramu i poslat ćemo ti
+                                        sve potrebne informacije.
+                                    </div>
+
+                                    <a href="https://www.instagram.com/ksi.matebalota/"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="btn btn-outline-primary d-flex align-items-center justify-content-center w-100 btn-sm mt-3">
+                                        <i class="ph ph-instagram-logo me-1"></i>
+
+                                        Javi nam se
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div class="profile-option-card mt-3">
+
+                                <div class="profile-option-icon">
+                                    <i class="ph ph-beer-bottle"></i>
+                                </div>
+
+                                <div class="profile-option-content">
+
+                                    <div class="d-flex align-items-center gap-2">
+
+                                        <div class="profile-option-title mb-0">
+                                            Želiš postati volonter?
+                                        </div>
+
+                                        <span class="volunteer-info"
+                                              title="Volonteri sudjeluju u organizaciji događaja, projektima i drugim aktivnostima kluba.">
+                                            <i class="ph ph-info"></i>
+                                        </span>
+
+                                    </div>
+
+                                    <div class="profile-option-text mt-1">
+                                        Uključi se u rad kluba, upoznaj ekipu
+                                        i sudjeluj u organizaciji naših aktivnosti.
+                                    </div>
+
                                     <button
-                                        class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
-                                        @onclick="Demote">
-                                        <i class="ph ph-arrow-down me-2"></i>
-                                        Makni prava
+                                        class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mt-3 w-100"
+                                        @onclick="@(() => NavigationManager.NavigateTo(PageRoutes.Volunteers))">
+
+                                        Saznaj više
+
+                                        <i class="ph ph-arrow-right ms-1"></i>
                                     </button>
-                                }
-                                else
-                                {
-                                    <button
-                                        class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
-                                        @onclick="Promote">
-                                        <i class="ph ph-arrow-up me-2"></i>
-                                        Promoviraj
-                                    </button>
-                                }
+
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+
+                    @if (_isAdmin)
+                    {
+                        <div class="mt-4">
+
+                            <div class="d-flex align-items-center justify-content-between gap-1">
 
                                 <button
-                                    class="btn btn-danger w-100 d-flex justify-content-center align-items-center gap-1"
-                                    @onclick="Delete">
-                                    <i class="ph ph-trash me-2"></i>
-                                    Obriši
+                                    class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-1 w-100"
+                                    @onclick="@(() => NavigationManager.NavigateTo($"admin/members/{_currentUserId}"))">
+
+                                    <i class="ph ph-users-three me-2"></i>
+
+                                    Svi članovi
                                 </button>
+
+                                @if (_member.Status is MembershipStatus.Pending)
+                                {
+                                    <button
+                                        class="btn btn-outline-success d-flex align-items-center justify-content-center gap-1 w-100"
+                                        @onclick="ApproveMember">
+
+                                        <i class="ph ph-check me-2"></i>
+
+                                        Odobri
+                                    </button>
+                                }
+
                             </div>
-                        }
+
+
+                            @if (MemberId != _currentUserId)
+                            {
+                                <div class="mt-2 d-flex align-items-center justify-content-between gap-1">
+
+                                    @if (_member.Status is MembershipStatus.Active)
+                                    {
+                                        @if (_member.IsAdmin)
+                                        {
+                                            <button
+                                                class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
+                                                @onclick="Demote">
+
+                                                <i class="ph ph-arrow-down me-2"></i>
+
+                                                Makni prava
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button
+                                                class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
+                                                @onclick="Promote">
+
+                                                <i class="ph ph-arrow-up me-2"></i>
+
+                                                Promoviraj
+                                            </button>
+                                        }
+                                    }
+
+                                    <button
+                                        class="btn btn-danger w-100 d-flex justify-content-center align-items-center gap-1"
+                                        @onclick="Delete">
+
+                                        <i class="ph ph-trash me-2"></i>
+
+                                        Obriši
+                                    </button>
+
+                                </div>
+                            }
+
+                        </div>
                     }
                 }
 
@@ -184,12 +338,14 @@
     </div>
 </div>
 
+
 <ConfirmationModal
     @bind-IsVisible="_isDeleteVisible"
     Title="Obriši člana"
     Message="@($"Jeste li sigurni da želite obrisati člana {_member?.FullName}? Ova radnja se ne može poništiti.")"
     ConfirmText="Obriši"
     OnConfirm="DeleteConfirmed"/>
+
 
 @code {
 
@@ -201,18 +357,35 @@
 
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
+
     private Member? _member;
 
     private bool _isDeleteVisible;
     private bool _isAdmin;
+
     private Guid? _currentUserId;
+
+    private Member? _approver;
+
 
     protected override async Task OnParametersSetAsync()
     {
-        _member = await MembersService.GetMemberById(MemberId);
+        _isAdmin = false;
+        _approver = null;
+
+        _member =
+            await MembersService.GetMemberById(MemberId);
+
+        if (_member?.ApproverId.HasValue is true)
+        {
+            _approver =
+                await MembersService.GetMemberById(
+                    _member.ApproverId.Value);
+        }
 
         var authState =
-            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            await AuthenticationStateProvider
+                .GetAuthenticationStateAsync();
 
         var user = authState.User;
 
@@ -221,64 +394,116 @@
         {
             _isAdmin = true;
 
-            var userId = user.FindFirstValue(
-                ClaimTypes.NameIdentifier);
+            var userId =
+                user.FindFirstValue(
+                    ClaimTypes.NameIdentifier);
 
-            if (Guid.TryParse(userId, out var currentUserId))
+            if (Guid.TryParse(
+                    userId,
+                    out var currentUserId))
             {
                 _currentUserId = currentUserId;
             }
         }
     }
 
-    private static string GetStatusClass(MembershipStatus status)
+
+    private static string GetStatusClass(
+        MembershipStatus status)
     {
         return status switch
         {
-            MembershipStatus.Active => "badge text-bg-success",
-            MembershipStatus.Pending => "badge text-bg-warning",
-            MembershipStatus.Denied => "badge text-bg-danger",
-            _ => "badge text-bg-secondary"
+            MembershipStatus.Active =>
+                "badge text-bg-success",
+
+            MembershipStatus.Pending =>
+                "badge text-bg-warning",
+
+            MembershipStatus.Denied =>
+                "badge text-bg-danger",
+
+            _ =>
+                "badge text-bg-secondary"
         };
     }
 
-    private static string GetStatusText(MembershipStatus status)
+
+    private static string GetStatusText(
+        MembershipStatus status)
     {
         return status switch
         {
-            MembershipStatus.Active => "Aktivan član",
-            MembershipStatus.Pending => "Čeka odobrenje",
-            MembershipStatus.Denied => "Odbijeno",
-            _ => status.ToString()
+            MembershipStatus.Active =>
+                "Aktivan član",
+
+            MembershipStatus.Pending =>
+                "Čeka odobrenje",
+
+            MembershipStatus.Denied =>
+                "Odbijeno",
+
+            _ =>
+                status.ToString()
         };
     }
+
+
+    private async Task ApproveMember()
+    {
+        _member =
+            await MembersService.UpdateMembership(
+                MemberId,
+                MembershipStatus.Active,
+                _currentUserId);
+
+        if (_member?.ApproverId.HasValue is true)
+        {
+            _approver =
+                await MembersService.GetMemberById(
+                    _member.ApproverId.Value);
+        }
+    }
+
 
     private async Task Promote()
     {
-        _member = await MembersService.UpdateAdminStatus(MemberId, true);
+        _member =
+            await MembersService.UpdateAdminStatus(
+                MemberId,
+                true);
     }
+
 
     private async Task Demote()
     {
-        _member = await MembersService.UpdateAdminStatus(MemberId, false);
+        _member =
+            await MembersService.UpdateAdminStatus(
+                MemberId,
+                false);
     }
+
 
     private Task Delete()
     {
         _isDeleteVisible = true;
+
         return Task.CompletedTask;
     }
+
 
     private async Task DeleteConfirmed()
     {
         if (_member is null)
         {
-        return;
+            return;
         }
 
-        await MembersService.DeleteMember(_member.Id);
+        await MembersService.DeleteMember(
+            _member.Id,
+            _currentUserId);
 
-        NavigationManager.NavigateTo($"admin/members/{_currentUserId}");
+        NavigationManager.NavigateTo(
+            $"admin/members/{_currentUserId}");
     }
 
 }

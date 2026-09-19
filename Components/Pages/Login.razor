@@ -1,7 +1,6 @@
 ﻿@page "/login"
 
 @using System.ComponentModel.DataAnnotations
-@using ksimb_membership.Modules
 @using ksimb_membership.Modules.Members
 
 <PageTitle>Prijava</PageTitle>
@@ -19,10 +18,11 @@
             Unesi svoj OIB za pristup svom profilu.
         </p>
 
-        <EditForm Model="_model"
-                  OnValidSubmit="HandleSubmit">
+        <form method="post"
+              action="/auth/user-sign-in"
+              data-enhance="false">
 
-            <DataAnnotationsValidator />
+            <AntiforgeryToken/>
 
             <div class="mb-4">
 
@@ -37,118 +37,69 @@
                         <i class="ph ph-identification-card"></i>
                     </span>
 
-                    <InputText
-                        id="oib"
-                        class="form-control"
-                        maxlength="11"
-                        inputmode="numeric"
-                        placeholder="Unesi OIB"
-                        @bind-Value="_model.Oib" />
+                    <input id="oib"
+                           name="OIB"
+                           class="form-control"
+                           maxlength="11"
+                           inputmode="numeric"
+                           placeholder="Unesi OIB"
+                           @bind="_model.Oib"/>
 
                 </div>
 
-                <ValidationMessage
-                    For="@(() => _model.Oib)" />
+                @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                {
+                    <div class="alert alert-danger d-flex align-items-center gap-2 mt-2">
+                        <i class="ph ph-warning-circle"></i>
+
+                        <span>
+                            @_errorMessage
+                        </span>
+                    </div>
+                }
+
+                <button type="submit"
+                        class="btn primary-button btn-lg w-100 mt-3"
+                        disabled="@_isSubmitting">
+
+                    @if (_isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        <span>Prijava...</span>
+                    }
+                    else
+                    {
+                        <span>Prijavi se</span>
+                    }
+
+                </button>
+
+                <div class="text-center mt-4">
+
+                    <span class="text-secondary">
+                        Nisi član?
+                    </span>
+
+                    <a href="@PageRoutes.Register"
+                       class="text-decoration-none fw-semibold ms-1">
+                        Učlani se
+                    </a>
+
+                </div>
 
             </div>
 
-            @if (!string.IsNullOrWhiteSpace(_errorMessage))
-            {
-                <div class="alert alert-danger d-flex align-items-center gap-2">
-                    <i class="ph ph-warning-circle"></i>
-
-                    <span>
-                        @_errorMessage
-                    </span>
-                </div>
-            }
-
-            <button type="submit"
-                    class="btn primary-button btn-lg w-100"
-                    disabled="@_isSubmitting">
-
-                @if (_isSubmitting)
-                {
-                    <span class="spinner-border spinner-border-sm me-2"></span>
-                    <span>Prijava...</span>
-                }
-                else
-                {
-                    <span>Prijavi se</span>
-                }
-
-            </button>
-
-        </EditForm>
-
-        <div class="text-center mt-4">
-
-            <span class="text-secondary">
-                Nisi član?
-            </span>
-
-            <a href="@PageRoutes.Register"
-               class="text-decoration-none fw-semibold ms-1">
-                Učlani se
-            </a>
-
-        </div>
+        </form>
 
     </div>
 </div>
 
 @code {
 
-    [Inject]
-    private IMembersService MembersService { get; set; } = null!;
-
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = null!;
-
-    [Inject]
-    private ICurrentUserService CurrentUserService { get; set; } = null!;
-
     private LoginModel _model = new();
 
     private bool _isSubmitting;
     private string? _errorMessage;
-
-    private async Task HandleSubmit()
-    {
-        _errorMessage = null;
-        _isSubmitting = true;
-
-        try
-        {
-            var member =
-                await MembersService.GetMemberByPersonalId(_model.Oib);
-
-            if (member is null)
-            {
-                _errorMessage =
-                    "Član s unesenim OIB-om nije pronađen.";
-
-                return;
-            }
-
-            if (member.IsAdmin)
-            {
-                NavigationManager.NavigateTo(
-                    $"/security-check/{member.Id}");
-
-                return;
-            }
-
-            CurrentUserService.SetCurrentUser(member.Id);
-
-            NavigationManager.NavigateTo(
-                $"/profile/{member.Id}");
-        }
-        finally
-        {
-            _isSubmitting = false;
-        }
-    }
 
     private sealed class LoginModel
     {
@@ -156,4 +107,5 @@
         [OIB(ErrorMessage = "Unesite ispravan OIB.")]
         public string Oib { get; set; } = string.Empty;
     }
+
 }
