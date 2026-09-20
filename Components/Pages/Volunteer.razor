@@ -272,6 +272,38 @@
             </div>
 
 
+            <div class="volunteer-video-card">
+
+                <div class="volunteer-video-header">
+
+                    <div class="gallery-category-icon">
+                        <i class="ph ph-play-circle"></i>
+                    </div>
+
+                    <div>
+                        <h3>Osjeti atmosferu</h3>
+
+                        <p>
+                            Pogledaj kako izgledaju druženja, događaji
+                            i svakodnevica u našem klubu.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="volunteer-video-wrapper">
+                    <video playsinline
+                           controls
+                           preload="metadata">
+                        <source src="/videos/jenunoc.mp4"
+                                type="video/mp4">
+
+                        Tvoj preglednik ne podržava prikaz videa.
+                    </video>
+                </div>
+
+            </div>
+
             <div class="volunteer-gallery-categories">
 
                 @* ============================= *@
@@ -302,6 +334,8 @@
 
                         <img src="@EventsImages[_eventsIndex]"
                              alt="Događaji kluba"
+                             loading="lazy"
+                             decoding="async"
                              class="gallery-main-image"/>
 
                         @if (EventsImages.Length > 1)
@@ -344,6 +378,8 @@
                                     @onclick="@(() => _eventsIndex = index)">
 
                                 <img src="@EventsImages[index]"
+                                     loading="lazy"
+                                     decoding="async"
                                      alt="Fotografija događaja"/>
 
                             </button>
@@ -382,6 +418,8 @@
 
                         <img src="@TeamImages[_teamIndex]"
                              alt="Volonterska ekipa"
+                             loading="lazy"
+                             decoding="async"
                              class="gallery-main-image"/>
 
                         @if (TeamImages.Length > 1)
@@ -424,6 +462,8 @@
                                     @onclick="@(() => _teamIndex = index)">
 
                                 <img src="@TeamImages[index]"
+                                     loading="lazy"
+                                     decoding="async"
                                      alt="Fotografija ekipe"/>
 
                             </button>
@@ -462,6 +502,8 @@
 
                         <img src="@ActivityImages[_activityIndex]"
                              alt="Aktivnosti kluba"
+                             loading="lazy"
+                             decoding="async"
                              class="gallery-main-image"/>
 
                         @if (ActivityImages.Length > 1)
@@ -504,6 +546,8 @@
                                     @onclick="@(() => _activityIndex = index)">
 
                                 <img src="@ActivityImages[index]"
+                                     loading="lazy"
+                                     decoding="async"
                                      alt="Fotografija aktivnosti"/>
 
                             </button>
@@ -583,7 +627,9 @@
     private static readonly string[] EventsImages =
     [
         "/images/koncert.jpeg",
-        "/images/fullhouse.jpeg"
+        "/images/fullhouse.jpeg",
+        "/images/night.jpeg",
+        "/images/vino.jpeg"
     ];
 
     private static readonly string[] TeamImages =
@@ -597,6 +643,7 @@
         "/images/futsal.jpeg",
         "/images/stolni.jpeg",
         "/images/dj.jpeg",
+        "/images/kviz.jpeg"
     ];
 
 
