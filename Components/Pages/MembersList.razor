@@ -22,15 +22,29 @@
                 </p>
             </div>
 
-            <button class="btn btn-outline-primary d-flex align-items-center justify-content-center"
-                    @onclick="ExportMembers">
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-danger  d-flex align-items-center justify-content-center"
+                        @onclick="CreateCards">
 
-                <i class="ph ph-file-xls me-1"></i>
+                    <i class="ph ph-identification-card me-1"></i>
 
-                <span class="d-none d-sm-inline">
-                    Export
-                </span>
-            </button>
+                    <span class="d-none d-sm-inline">
+                        Napravi članske
+                    </span>
+                </button>
+
+                <button class="btn btn-primary d-flex align-items-center justify-content-center"
+                        @onclick="ExportMembers">
+
+                    <i class="ph ph-file-xls me-1"></i>
+
+                    <span class="d-none d-sm-inline">
+                        Export
+                    </span>
+                </button>
+            </div>
+
+
         </div>
 
         <div class="mb-4">
@@ -134,11 +148,14 @@
 
 @code {
 
-    [Parameter] public Guid AdminId { get; set; }
+    [Parameter]
+    public Guid AdminId { get; set; }
 
-    [Inject] private IMembersService MembersService { get; set; } = null!;
+    [Inject]
+    private IMembersService MembersService { get; set; } = null!;
 
-    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
 
     private List<Member>? _members;
 
@@ -147,8 +164,6 @@
     private string _searchTerm = string.Empty;
 
     private readonly HashSet<Guid> _approvingIds = [];
-
-    private bool _isExporting;
 
     private IEnumerable<Member> FilteredMembers =>
         _members?
@@ -187,17 +202,30 @@
 
     private async Task ExportMembers()
     {
-        _isExporting = true;
-
         try
         {
             NavigationManager.NavigateTo(
                 "/admin/members/export",
                 forceLoad: true);
         }
-        finally
+        catch (Exception)
         {
-            _isExporting = false;
+            // Ignore for now
         }
     }
+
+    private async Task CreateCards()
+    {
+        try
+        {
+            NavigationManager.NavigateTo(
+                "/api/members/cards",
+                forceLoad: true);
+        }
+        catch (Exception)
+        {
+            // Ignore for now
+        }
+    }
+
 }

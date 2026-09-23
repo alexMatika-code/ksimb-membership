@@ -43,7 +43,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
             entity.Property(x => x.DateOfBirth)
                 .IsRequired();
-            
+
             entity.Property(x => x.BirthPlace)
                 .IsRequired();
 
@@ -54,9 +54,15 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             entity.Property(x => x.IsAdmin);
 
             entity.Property(x => x.CreatedAt);
-            
+
             entity.Property(x => x.ApproverId);
             entity.Property(x => x.ApprovedAt);
+
+            entity.Property(x => x.MemberCardNumber)
+                .UseIdentityAlwaysColumn();
+            
+            entity.HasIndex(x => x.MemberCardNumber)
+                .IsUnique();
         });
 
         modelBuilder.Entity<SecuritySettings>(entity =>

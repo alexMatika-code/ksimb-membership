@@ -34,6 +34,8 @@ public sealed class Member
     public Guid? ApproverId { get; set; }
     
     public DateTimeOffset? ApprovedAt { get; set; }
+    
+    public int? MemberCardNumber { get; set; }
 }
 
 public enum College

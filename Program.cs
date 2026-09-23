@@ -4,6 +4,7 @@ using ksimb_membership.Modules.Members;
 using ksimb_membership.Modules.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped<IMembersService, MembersService>();
+builder.Services.AddScoped<MemberCardPdfService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<ISecurityService, SecurityService>();
 builder.Services.AddScoped<IPasswordHasher<SecuritySettings>, PasswordHasher<SecuritySettings>>();
@@ -79,4 +81,26 @@ app.MapGet("/admin/members/export",
         })
     .RequireAuthorization(policy =>
         policy.RequireRole("Admin"));
+
+app.MapGet("/api/members/cards", async (
+    ApplicationDbContext dbContext,
+    MemberCardPdfService pdfService) =>
+{
+    var members = await dbContext.Members
+        .Where(x =>
+            x.Status == MembershipStatus.Active &&
+            x.MemberCardNumber != null)
+        .OrderBy(x => x.MemberCardNumber)
+        .ToListAsync();
+
+    var pdf = pdfService.Generate(members);
+
+    return Results.File(
+        pdf,
+        "application/pdf",
+        "member-cards.pdf");
+}).RequireAuthorization(policy => policy.RequireRole("Admin"));
+
+QuestPDF.Settings.License = LicenseType.Community;
+
 app.Run();
