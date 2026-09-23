@@ -36,6 +36,8 @@ public sealed class Member
     public DateTimeOffset? ApprovedAt { get; set; }
     
     public int? MemberCardNumber { get; set; }
+    
+    public bool IsCardCreated  { get; set; }
 }
 
 public enum College

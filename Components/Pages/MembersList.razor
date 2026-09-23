@@ -218,6 +218,10 @@
     {
         try
         {
+            if (_members is null)
+            {
+                return;
+            }
             NavigationManager.NavigateTo(
                 "/api/members/cards",
                 forceLoad: true);

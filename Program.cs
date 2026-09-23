@@ -4,6 +4,7 @@ using ksimb_membership.Modules.Members;
 using ksimb_membership.Modules.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Drawing;
 using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,16 +85,20 @@ app.MapGet("/admin/members/export",
 
 app.MapGet("/api/members/cards", async (
     ApplicationDbContext dbContext,
+    IMembersService membersService,
     MemberCardPdfService pdfService) =>
 {
     var members = await dbContext.Members
         .Where(x =>
             x.Status == MembershipStatus.Active &&
+            x.IsCardCreated == false &&
             x.MemberCardNumber != null)
         .OrderBy(x => x.MemberCardNumber)
         .ToListAsync();
 
     var pdf = pdfService.Generate(members);
+
+    await membersService.UpdateCardCreationStatuses(members.Select(e => e.Id).ToList());
 
     return Results.File(
         pdf,
@@ -102,5 +107,6 @@ app.MapGet("/api/members/cards", async (
 }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
 QuestPDF.Settings.License = LicenseType.Community;
+QuestPDF.Settings.UseSystemFonts = true;
 
 app.Run();

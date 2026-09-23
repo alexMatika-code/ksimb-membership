@@ -59,10 +59,12 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             entity.Property(x => x.ApprovedAt);
 
             entity.Property(x => x.MemberCardNumber)
-                .UseIdentityAlwaysColumn();
-            
+                .UseIdentityByDefaultColumn();
+
             entity.HasIndex(x => x.MemberCardNumber)
                 .IsUnique();
+
+            entity.Property(x => x.IsCardCreated);
         });
 
         modelBuilder.Entity<SecuritySettings>(entity =>

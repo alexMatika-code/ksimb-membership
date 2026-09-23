@@ -6,8 +6,32 @@ namespace ksimb_membership.Modules.Members;
 
 internal sealed class MemberCardPdfService
 {
-    private const float CardWidth = 85.60f;
+    private const int CardsPerPage = 10;
+
+    private const float CardWidth = 85.6f;
     private const float CardHeight = 53.98f;
+
+    private const float HorizontalGap = 1f;
+    private const float VerticalGap = 0.5f;
+
+    private const float PageLeft = 14f;
+    private const float PageTop = 8f;
+
+    private const float FirstNameX = 13f;
+    private const float FirstNameY = 9.5f;
+
+    private const float LastNameX = 20f;
+    private const float LastNameY = 15.3f;
+
+    private const float CardNumberX = 28f;
+    private const float CardNumberY = 20.8f;
+
+    private readonly IWebHostEnvironment _environment;
+
+    public MemberCardPdfService(IWebHostEnvironment environment)
+    {
+        _environment = environment;
+    }
 
     public byte[] Generate(IEnumerable<Member> members)
     {
@@ -16,140 +40,152 @@ internal sealed class MemberCardPdfService
             .OrderBy(x => x.MemberCardNumber)
             .ToList();
 
+        var frontPath = Path.Combine(
+            _environment.WebRootPath,
+            "assets",
+            "front.png");
+
+        var backPath = Path.Combine(
+            _environment.WebRootPath,
+            "assets",
+            "back.png");
         return Document.Create(document =>
         {
-            foreach (var batch in membersWithCards.Chunk(8))
+            foreach (var batch in membersWithCards.Chunk(CardsPerPage))
             {
-                AddFrontPage(document, batch);
-                AddBackPage(document, batch);
+                var cards = batch.ToList();
+                AddFrontPage(document, cards, frontPath);
+                AddBackPage(document, cards, backPath);
             }
         }).GeneratePdf();
     }
 
     private static void AddFrontPage(
         IDocumentContainer document,
-        IReadOnlyCollection<Member> members)
+        IReadOnlyList<Member> members,
+        string frontPath)
     {
         document.Page(page =>
         {
             page.Size(PageSizes.A4);
-            page.Margin(10, Unit.Millimetre);
+            page.Margin(0);
 
             page.Content()
-                .AlignCenter()
-                .AlignMiddle()
-                .Grid(grid =>
-                {
-                    grid.Columns(2);
-
-                    foreach (var member in members)
-                    {
-                        grid.Item()
-                            .Width(CardWidth, Unit.Millimetre)
-                            .Height(CardHeight, Unit.Millimetre)
-                            .Element(container => DrawFront(container, member));
-                    }
-                });
+                .Element(container =>
+                    DrawPage(container, members, frontPath, true));
         });
     }
 
     private static void AddBackPage(
         IDocumentContainer document,
-        IReadOnlyCollection<Member> members)
+        IReadOnlyList<Member> members,
+        string backPath)
     {
-        /*
-         * Kod duplex printanja raspored poleđine mora odgovarati
-         * rasporedu prednje strane.
-         *
-         * Za 2 stupca zamjenjujemo lijevu/desnu karticu:
-         *
-         * FRONT:       BACK:
-         *
-         * 1 | 2        2 | 1
-         * 3 | 4        4 | 3
-         * 5 | 6        6 | 5
-         * 7 | 8        8 | 7
-         */
-
-        var mirrored = members
-            .Chunk(2)
-            .SelectMany(row => row.Reverse())
-            .ToList();
-
         document.Page(page =>
         {
             page.Size(PageSizes.A4);
-            page.Margin(10, Unit.Millimetre);
+            page.Margin(0);
 
             page.Content()
-                .AlignCenter()
-                .AlignMiddle()
-                .Grid(grid =>
-                {
-                    grid.Columns(2);
-
-                    foreach (var member in mirrored)
-                    {
-                        grid.Item()
-                            .Width(CardWidth, Unit.Millimetre)
-                            .Height(CardHeight, Unit.Millimetre)
-                            .Element(container => DrawBack(container, member));
-                    }
-                });
+                .Element(container =>
+                    DrawPage(container, members, backPath, false));
         });
     }
 
-    private static void DrawFront(IContainer container, Member member)
+    private static void DrawPage(
+        IContainer container,
+        IReadOnlyList<Member> members,
+        string imagePath,
+        bool isFront)
     {
         container
-            .Border(0.5f)
-            .Padding(5, Unit.Millimetre)
+            .PaddingTop(PageTop, Unit.Millimetre)
+            .PaddingLeft(PageLeft, Unit.Millimetre)
             .Column(column =>
             {
-                column.Spacing(2, Unit.Millimetre);
+                column.Spacing(VerticalGap, Unit.Millimetre);
 
-                column.Item()
-                    .Text("KSIMB")
-                    .Bold()
-                    .FontSize(16);
+                for (var row = 0; row < 5; row++)
+                {
+                    column.Item().Row(rowContainer =>
+                    {
+                        rowContainer.Spacing(HorizontalGap, Unit.Millimetre);
 
-                column.Item()
-                    .Text(member.FullName)
-                    .Bold()
-                    .FontSize(12);
+                        for (var col = 0; col < 2; col++)
+                        {
+                            var index = row * 2 + col;
 
-                column.Item()
-                    .Text($"Članski broj: {member.MemberCardNumber:D4}")
-                    .FontSize(10);
+                            rowContainer
+                                .ConstantItem(CardWidth, Unit.Millimetre)
+                                .Height(CardHeight, Unit.Millimetre)
+                                .Element(card =>
+                                {
+                                    if (index >= members.Count)
+                                        return;
+
+                                    if (isFront)
+                                        DrawFront(card, members[index], imagePath);
+                                    else
+                                        DrawBack(card, imagePath);
+                                });
+                        }
+                    });
+                }
             });
     }
 
-    private static void DrawBack(IContainer container, Member member)
+    private static void DrawFront(
+        IContainer container,
+        Member member,
+        string frontPath)
+    {
+        container.Layers(layers =>
+        {
+            layers.PrimaryLayer()
+                .Image(frontPath)
+                .FitArea();
+
+            AddCardText(
+                layers,
+                member.FirstName,
+                FirstNameX,
+                FirstNameY);
+
+            AddCardText(
+                layers,
+                member.LastName,
+                LastNameX,
+                LastNameY);
+
+            AddCardText(
+                layers,
+                $"{member.MemberCardNumber:000}",
+                CardNumberX,
+                CardNumberY);
+        });
+    }
+
+    private static void AddCardText(
+        LayersDescriptor layers,
+        string text,
+        float x,
+        float y)
+    {
+        layers.Layer()
+            .PaddingLeft(x, Unit.Millimetre)
+            .PaddingTop(y, Unit.Millimetre)
+            .Text(text)
+            .FontFamily("Georgia")
+            .FontSize(7)
+            .SemiBold();
+    }
+
+    private static void DrawBack(
+        IContainer container,
+        string backPath)
     {
         container
-            .Border(0.5f)
-            .Padding(5, Unit.Millimetre)
-            .Column(column =>
-            {
-                column.Spacing(2, Unit.Millimetre);
-
-                column.Item()
-                    .Text("KSIMB")
-                    .Bold()
-                    .FontSize(14);
-
-                column.Item()
-                    .Text($"Član: {member.FullName}")
-                    .FontSize(9);
-
-                column.Item()
-                    .Text($"Broj: {member.MemberCardNumber:D4}")
-                    .FontSize(9);
-
-                column.Item()
-                    .PaddingTop(5)
-                    .Text("Poleđina članske iskaznice")
-                    .FontSize(8);
-            });
+            .Image(backPath)
+            .FitArea();
     }
 }

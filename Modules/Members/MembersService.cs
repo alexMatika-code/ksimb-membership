@@ -19,6 +19,8 @@ public interface IMembersService
 
     public Task<Member?> UpdateAdminStatus(Guid id, bool status);
 
+    public Task UpdateCardCreationStatuses(List<Guid> ids);
+
     Task<byte[]> ExportMembers();
 }
 
@@ -64,7 +66,7 @@ internal sealed class MembersService(
         }
 
         await using var context = await dbContextFactory.CreateDbContextAsync();
-        
+
         member.BirthPlace = member.BirthPlace.Trim().ToLower();
         context.Members.Add(member);
         await context.SaveChangesAsync();
@@ -121,6 +123,21 @@ internal sealed class MembersService(
         context.Members.Update(member);
         await context.SaveChangesAsync();
         return member;
+    }
+
+    public async Task UpdateCardCreationStatuses(List<Guid> ids)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        var members = await db.Members
+            .AsNoTracking()
+            .Where(e => ids.Contains(e.Id))
+            .ToListAsync();
+        foreach (var member in members)
+        {
+            member.IsCardCreated = true;
+            db.Members.Update(member);
+        }
+        await db.SaveChangesAsync();
     }
 
     public async Task<byte[]> ExportMembers()
