@@ -1,0 +1,110 @@
+﻿@page "/članstvo"
+
+<PageTitle>Članstvo</PageTitle>
+
+<div class="landing-page mh-100 h-100">
+
+    <div class="landing-content h-100">
+
+        <div class="brand">
+            <img class="brand-mark" src="ksimb_logo.svg" alt="logo"/>
+
+            <div class="brand-name">
+                KSIMB
+            </div>
+        </div>
+
+        <div class="hero">
+
+            <div class="hero-badge">
+                <i class="ph ph-users-three"></i>
+                Članstvo
+            </div>
+
+            <h1>
+                Budi dio Kluba studenata Istre<br/>
+                <span> "Mate Balota"</span>
+            </h1>
+
+            <p>
+                Pridruži se klubu, upoznaj nove ljude
+                i postani dio naše zajednice.
+            </p>
+            <div class="d-flex flex-column gap-2">
+
+                <a href="https://www.instagram.com/ksi.matebalota/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="social-link p-3 rounded-3">
+
+                    <i class="ph ph-instagram-logo fs-4"></i>
+
+                    <div>
+                        <div class="fw-semibold">Instagram</div>
+                        <small class="text-secondary">
+                            Zaprati nas
+                        </small>
+                    </div>
+
+                    <i class="ph ph-arrow-up-right ms-auto"></i>
+                </a> 
+                
+                <a href="https://web.facebook.com/klubstudenataistre"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="social-link p-3 rounded-3">
+
+                    <i class="ph ph-facebook-logo fs-4"></i>
+
+                    <div>
+                        <div class="fw-semibold">Facebook</div>
+                        <small class="text-secondary">
+                            Zaprati nas
+                        </small>
+                    </div>
+
+                    <i class="ph ph-arrow-up-right ms-auto"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="landing-actions">
+
+            <button class="btn landing-primary primary-button"
+                    @onclick="GoToLogin">
+                <span>Prijavi se</span>
+                <i class="ph ph-arrow-right"></i>
+            </button>
+
+            <button class="btn secondary-button landing-secondary"
+                    @onclick="GoToRegister">
+                <span>Postani član</span>
+                <i class="ph ph-user-plus"></i>
+            </button>
+
+        </div>
+
+        <div class="landing-footer">
+            <i class="ph ph-map-pin"></i>
+            Zagreb, Ilica 13
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    private void GoToRegister()
+    {
+        NavigationManager.NavigateTo("/register");
+    }
+
+    private void GoToLogin()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+
+}

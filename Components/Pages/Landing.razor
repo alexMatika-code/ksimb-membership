@@ -1,110 +1,356 @@
-﻿@page "/"
+@page "/"
 
 <PageTitle>KSIMB</PageTitle>
 
-<div class="landing-page mh-100 h-100">
+<div class="club-page">
 
-    <div class="landing-content h-100">
+    <section class="club-hero position-relative overflow-hidden text-white">
 
-        <div class="brand">
-            <img class="brand-mark" src="ksimb_logo.svg" alt="logo"/>
+        <img src="ksimb_logo.svg"
+             class="club-hero-image"
+             alt="Klub studenata"/>
 
-            <div class="brand-name">
-                KSIMB
+        <div class="club-hero-overlay"></div>
+
+        <div class="container position-relative h-100 px-4 py-4 d-flex flex-column">
+
+            @* Top bar *@
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="club-logo">
+                    <i class="ph ph-user-circle"
+                       @onclick="@(() => NavigationManager.NavigateTo(PageRoutes.Login))">
+                    </i>
+                </div>
             </div>
+
+            @* Hero content *@
+            <div class="mt-auto">
+
+                <span class="badge rounded-pill hero-badge mb-3">
+                    Klub studenata Istre
+                </span>
+
+                <h1 class="display-5 fw-bold mb-1">
+                    "Mate Balota"
+                </h1>
+
+                <button type="button"
+                        class="btn secondary-button d-flex align-items-center justify-content-center gap-2 w-100 rounded-pill fw-semibold py-2"
+                        @onclick="@(() => NavigationManager.NavigateTo(PageRoutes.Membership))">
+                    <i class="ph ph-user-plus me-2"></i>
+                    Postani član
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="hero">
+    </section>
 
-            <div class="hero-badge">
-                <i class="ph ph-users-three"></i>
-                Članstvo
-            </div>
 
-            <h1>
-                Budi dio Kluba studenata Istre<br/>
-                <span> "Mate Balota"</span>
-            </h1>
+    @* =========================================================
+       FEED
+       ========================================================= *@
 
-            <p>
-                Pridruži se klubu, upoznaj nove ljude
-                i postani dio naše zajednice.
-            </p>
-            <div class="d-flex flex-column gap-2">
+    <main class="container px-3 py-3">
 
-                <a href="https://www.instagram.com/ksi.matebalota/"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="social-link p-3 rounded-3">
+        @* Posts *@
+        <div class="d-flex flex-column gap-3">
 
-                    <i class="ph ph-instagram-logo fs-4"></i>
+            @foreach (var post in FilteredPosts)
+            {
+                <article class="card post-card border-0 rounded-4 overflow-hidden">
 
-                    <div>
-                        <div class="fw-semibold">Instagram</div>
-                        <small class="text-secondary">
-                            Zaprati nas
-                        </small>
+                    @* IMAGE *@
+                    <div class="position-relative">
+
+                        <img src="@post.Image"
+                             class="post-image"
+                             alt="@post.Title"/>
+
+                        <span
+                            class="badge rounded-pill position-absolute top-0 start-0 m-3 px-3 py-2 @GetCategoryBadge(post.Category)">
+                            @post.Category
+                        </span>
                     </div>
 
-                    <i class="ph ph-arrow-up-right ms-auto"></i>
-                </a> 
-                
-                <a href="https://web.facebook.com/klubstudenataistre"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="social-link p-3 rounded-3">
 
-                    <i class="ph ph-facebook-logo fs-4"></i>
+                    @* CONTENT *@
+                    <div class="card-body p-3">
 
-                    <div>
-                        <div class="fw-semibold">Facebook</div>
-                        <small class="text-secondary">
-                            Zaprati nas
-                        </small>
+                        <h2 class="h5 fw-bold mb-2">
+                            @post.Title
+                        </h2>
+
+
+                        @if (post.EventDate.HasValue)
+                        {
+                            <div class="d-flex align-items-center gap-2 text-secondary small mb-1">
+
+                                <i class="ph ph-calendar-blank fs-5"></i>
+
+                                <span>
+                                    @FormatDate(post.EventDate.Value)
+                                </span>
+
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(post.Location))
+                        {
+                            <div class="d-flex align-items-center gap-2 text-secondary small mb-3">
+
+                                <i class="ph ph-map-pin fs-5"></i>
+
+                                <span>
+                                    @post.Location
+                                </span>
+
+                            </div>
+                        }
+
+
+                        <p class="text-secondary mb-3">
+                            @post.Description
+                        </p>
+
+
+                        @* ACTIONS *@
+                        <div class="d-flex align-items-center gap-4">
+
+                            @* Like *@
+                            <button type="button"
+                                    class="btn post-action p-0 @(post.IsLiked ? "liked" : "")"
+                                    @onclick="() => ToggleLike(post)">
+
+                                <i class="@(post.IsLiked ? "ph-fill" : "ph") ph-heart"></i>
+
+                                <span>
+                                    @post.Likes
+                                </span>
+
+                            </button>
+
+
+                            @* Comments *@
+                            <button type="button"
+                                    class="btn post-action p-0">
+
+                                <i class="ph ph-chat-circle"></i>
+
+                                <span>
+                                    @post.Comments
+                                </span>
+
+                            </button>
+
+                        </div>
+
                     </div>
 
-                    <i class="ph ph-arrow-up-right ms-auto"></i>
-                </a>
+                </article>
+            }
+
+        </div>
+
+
+        @if (!FilteredPosts.Any())
+        {
+            <div class="text-center py-5">
+
+                <div class="empty-icon mx-auto mb-3">
+                    <i class="ph ph-newspaper"></i>
+                </div>
+
+                <h3 class="h5 fw-bold">
+                    Nema objava
+                </h3>
+
+                <p class="text-secondary mb-0">
+                    Trenutno nema objava u ovoj kategoriji.
+                </p>
+
             </div>
-        </div>
+        }
 
-        <div class="landing-actions">
-
-            <button class="btn landing-primary primary-button"
-                    @onclick="GoToLogin">
-                <span>Prijavi se</span>
-                <i class="ph ph-arrow-right"></i>
-            </button>
-
-            <button class="btn secondary-button landing-secondary"
-                    @onclick="GoToRegister">
-                <span>Postani član</span>
-                <i class="ph ph-user-plus"></i>
-            </button>
-
-        </div>
-
-        <div class="landing-footer">
-            <i class="ph ph-map-pin"></i>
-            Zagreb, Ilica 13
-        </div>
-
-    </div>
-
+    </main>
 </div>
+
 
 @code {
 
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-    private void GoToRegister()
+    private string SelectedCategory { get; set; } = "Sve";
+
+
+    private List<ClubPost> Posts { get; } =
+    [
+        new ClubPost
+        {
+            Id = 3,
+            Title = "Pub kviz večer 🧠",
+            Category = "Događanja",
+
+            Description =
+                "Okupljamo ekipe za još jedan pub kviz! " +
+                "Prijavi svoju ekipu i pokaži znanje (i sreću).",
+
+            Image = "images/kviz.jpeg",
+
+            Location = "Caffe Bar Kultura",
+
+            EventDate = new DateTime(2026, 5, 5, 19, 0, 0),
+
+            Likes = 28,
+            Comments = 3
+        },
+
+        new ClubPost
+        {
+            Id = 4,
+            Title = "Novo predsjedništvo kluba 👋",
+            Category = "Novosti",
+
+            Description =
+                "Predstavljamo novu upravu našeg kluba. " +
+                "Imamo puno ideja i još više planova za nadolazeći semestar!",
+
+            Image = "images/team-building.jpeg",
+
+            Likes = 41,
+            Comments = 6
+        }
+    ];
+
+
+    private IEnumerable<ClubPost> FilteredPosts =>
+        SelectedCategory == "Sve"
+            ? Posts
+            : Posts.Where(x => x.Category == SelectedCategory);
+
+
+    private void SelectCategory(string category)
     {
-        NavigationManager.NavigateTo("/register");
+        SelectedCategory = category;
     }
 
-    private void GoToLogin()
+
+    private void ToggleLike(ClubPost post)
     {
-        NavigationManager.NavigateTo("/login");
+        post.IsLiked = !post.IsLiked;
+
+        if (post.IsLiked)
+        {
+            post.Likes++;
+        }
+        else
+        {
+            post.Likes--;
+        }
+    }
+
+
+    private void ToggleSave(ClubPost post)
+    {
+        post.IsSaved = !post.IsSaved;
+    }
+
+
+    private static string GetCategoryBadge(string category)
+    {
+        return category switch
+        {
+            "Događanja" => "badge-event",
+            "Izleti" => "badge-trip",
+            "Novosti" => "badge-news",
+            _ => "badge-other"
+        };
+    }
+
+
+    private static string GetMonth(DateTime date)
+    {
+        string[] months =
+        [
+            "SIJ",
+            "VELJ",
+            "OŽU",
+            "TRA",
+            "SVI",
+            "LIP",
+            "SRP",
+            "KOL",
+            "RUJ",
+            "LIS",
+            "STU",
+            "PRO"
+        ];
+
+        return months[date.Month - 1];
+    }
+
+
+    private static string FormatDate(DateTime date)
+    {
+        string[] days =
+        [
+            "nedjelja",
+            "ponedjeljak",
+            "utorak",
+            "srijeda",
+            "četvrtak",
+            "petak",
+            "subota"
+        ];
+
+        string[] months =
+        [
+            "",
+            "siječnja",
+            "veljače",
+            "ožujka",
+            "travnja",
+            "svibnja",
+            "lipnja",
+            "srpnja",
+            "kolovoza",
+            "rujna",
+            "listopada",
+            "studenoga",
+            "prosinca"
+        ];
+
+        return $"{days[(int)date.DayOfWeek]}, " +
+               $"{date.Day}. {months[date.Month]} " +
+               $"{date.Year}. u {date:HH:mm}";
+    }
+
+
+    private sealed class ClubPost
+    {
+        public int Id { get; set; }
+
+        public string Title { get; set; } = "";
+
+        public string Category { get; set; } = "";
+
+        public string Description { get; set; } = "";
+
+        public string Image { get; set; } = "";
+
+        public string? Location { get; set; }
+
+        public DateTime? EventDate { get; set; }
+
+        public int Likes { get; set; }
+
+        public int Comments { get; set; }
+
+        public bool IsLiked { get; set; }
+
+        public bool IsSaved { get; set; }
     }
 
 }
