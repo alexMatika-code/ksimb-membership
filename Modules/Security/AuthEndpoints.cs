@@ -77,7 +77,7 @@ public static class AuthEndpoints
                     principal);
 
                 return Results.Redirect(
-                    $"/profile/{member.Id}");
+                    $"/profil/{member.Id}");
             });
 
         app.MapPost("/auth/user-sign-in",
@@ -127,7 +127,7 @@ public static class AuthEndpoints
                     principal);
 
                 return Results.Redirect(
-                    $"/profile/{member.Id}");
+                    $"/profil/{member.Id}");
             });
     }
 }

@@ -2,9 +2,9 @@
 
 public static class PageRoutes
 {
-    public const string Landing = "/";
+    public const string Membership = "/članstvo";
 
-    public const string Register = "/register";
+    public const string Register = "/postani-član";
 
     public const string Login = "/login";
     
