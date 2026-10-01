@@ -11,7 +11,7 @@ internal sealed class MemberCardPdfService
     private const float CardWidth = 85.6f;
     private const float CardHeight = 53.98f;
 
-    private const float HorizontalGap = 1f;
+    private const float HorizontalGap = 2f;
     private const float VerticalGap = 0.5f;
 
     private const float PageLeft = 14f;
