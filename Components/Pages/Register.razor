@@ -101,7 +101,10 @@
                             <InputSelect
                                 id="college"
                                 class="form-select form-select-lg"
-                                @bind-Value="_selectedCollege">
+                                TValue="College?"
+                                Value="_selectedCollege"
+                                ValueChanged="@((college) => OnCollegeChanged(college))"
+                                ValueExpression="@(() => _selectedCollege)">
 
                                 <option value="">Odaberi fakultet</option>
 
@@ -212,17 +215,16 @@
 
     private College? _selectedCollege;
 
-    private void UpdateCollege()
+    private void OnCollegeChanged(College? college)
     {
-        if (_selectedCollege is not null &&
-            _selectedCollege != College.Drugo)
+        _selectedCollege = college;
+
+        _model.College = college switch
         {
-            _model.College = _selectedCollege.Value.Humanize();
-        }
-        else
-        {
-            _model.College = string.Empty;
-        }
+            null => string.Empty,
+            College.Drugo => string.Empty,
+            _ => college.Value.Humanize()
+        };
     }
 
     private async Task HandleSubmit()
