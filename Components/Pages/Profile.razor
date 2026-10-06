@@ -47,12 +47,6 @@
                                 @GetStatusText(_member.Status)
                             </span>
 
-                            @if (_member.Status is MembershipStatus.Pending)
-                            {
-                                <div class="mt-2 text-secondary">
-                                    Javi nam se u klubu za potvrdu članstva
-                                </div>
-                            }
                         </div>
 
                         <hr class="my-4"/>
@@ -177,12 +171,100 @@
                         </div>
                     </div>
 
+                    @if (_member.Status is MembershipStatus.Pending && _currentUserId == _member.Id)
+                    {
+                        <div class="mt-3 text-secondary small">
+                            <p class="mb-1">
+                                Za potvrdu članstva javi se nekome od nas kako bismo mogli riješiti članarinu.
+                            </p>
+
+                            <p class="mb-0">
+                                Godišnja članarina iznosi <strong>10 €</strong> i omogućuje ti pristup pogodnostima
+                                i besplatnim događajima u klubu.
+                            </p>
+                        </div>
+                    }
 
                     @* ============================= *@
                     @* MOGUĆNOSTI ZA ČLANOVE         *@
                     @* ============================= *@
 
-                    @if (!_isAdmin)
+                    @if (_isAdmin)
+                    {
+                        <div class="mt-4">
+
+                            <div class="d-flex align-items-center justify-content-between gap-1">
+
+                                <button
+                                    class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-1 w-100"
+                                    @onclick="@(() => NavigationManager.NavigateTo($"admin/members/{_currentUserId}"))">
+
+                                    <i class="ph ph-users-three me-2"></i>
+
+                                    Svi članovi
+                                </button>
+
+                                @if (_member.Status is MembershipStatus.Pending)
+                                {
+                                    <button
+                                        class="btn btn-outline-success d-flex align-items-center justify-content-center gap-1 w-100"
+                                        @onclick="ApproveMember">
+
+                                        <i class="ph ph-check me-2"></i>
+
+                                        Odobri
+                                    </button>
+                                }
+
+                            </div>
+
+
+                            @if (MemberId != _currentUserId)
+                            {
+                                <div class="mt-2 d-flex align-items-center justify-content-between gap-1">
+
+                                    @if (_member.Status is MembershipStatus.Active)
+                                    {
+                                        @if (_member.IsAdmin)
+                                        {
+                                            <button
+                                                class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
+                                                @onclick="Demote">
+
+                                                <i class="ph ph-arrow-down me-2"></i>
+
+                                                Makni prava
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button
+                                                class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
+                                                @onclick="Promote">
+
+                                                <i class="ph ph-arrow-up me-2"></i>
+
+                                                Promoviraj
+                                            </button>
+                                        }
+                                    }
+
+                                    <button
+                                        class="btn btn-danger w-100 d-flex justify-content-center align-items-center gap-1"
+                                        @onclick="Delete">
+
+                                        <i class="ph ph-trash me-2"></i>
+
+                                        Obriši
+                                    </button>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+
+                    @if (_member.Id == _currentUserId)
                     {
                         <div class="member-opportunities mt-4">
 
@@ -267,81 +349,6 @@
 
                         </div>
                     }
-
-                    @if (_isAdmin)
-                    {
-                        <div class="mt-4">
-
-                            <div class="d-flex align-items-center justify-content-between gap-1">
-
-                                <button
-                                    class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-1 w-100"
-                                    @onclick="@(() => NavigationManager.NavigateTo($"admin/members/{_currentUserId}"))">
-
-                                    <i class="ph ph-users-three me-2"></i>
-
-                                    Svi članovi
-                                </button>
-
-                                @if (_member.Status is MembershipStatus.Pending)
-                                {
-                                    <button
-                                        class="btn btn-outline-success d-flex align-items-center justify-content-center gap-1 w-100"
-                                        @onclick="ApproveMember">
-
-                                        <i class="ph ph-check me-2"></i>
-
-                                        Odobri
-                                    </button>
-                                }
-
-                            </div>
-
-
-                            @if (MemberId != _currentUserId)
-                            {
-                                <div class="mt-2 d-flex align-items-center justify-content-between gap-1">
-
-                                    @if (_member.Status is MembershipStatus.Active)
-                                    {
-                                        @if (_member.IsAdmin)
-                                        {
-                                            <button
-                                                class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
-                                                @onclick="Demote">
-
-                                                <i class="ph ph-arrow-down me-2"></i>
-
-                                                Makni prava
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button
-                                                class="btn btn-warning w-100 d-flex justify-content-center align-items-center gap-1"
-                                                @onclick="Promote">
-
-                                                <i class="ph ph-arrow-up me-2"></i>
-
-                                                Promoviraj
-                                            </button>
-                                        }
-                                    }
-
-                                    <button
-                                        class="btn btn-danger w-100 d-flex justify-content-center align-items-center gap-1"
-                                        @onclick="Delete">
-
-                                        <i class="ph ph-trash me-2"></i>
-
-                                        Obriši
-                                    </button>
-
-                                </div>
-                            }
-
-                        </div>
-                    }
                 }
 
             </div>
@@ -360,13 +367,17 @@
 
 @code {
 
-    [Parameter] public Guid MemberId { get; set; }
+    [Parameter]
+    public Guid MemberId { get; set; }
 
-    [Inject] private IMembersService MembersService { get; set; } = null!;
+    [Inject]
+    private IMembersService MembersService { get; set; } = null!;
 
-    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
 
-    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
 
     private Member? _member;

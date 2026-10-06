@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Globalization;
+using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 
 namespace ksimb_membership.Modules.Members;
@@ -137,6 +138,7 @@ internal sealed class MembersService(
             member.IsCardCreated = true;
             db.Members.Update(member);
         }
+
         await db.SaveChangesAsync();
     }
 
@@ -172,10 +174,10 @@ internal sealed class MembersService(
             worksheet.Cell(row, 3).Value = member.PersonalIdentityNumber;
             worksheet.Cell(row, 4).Value = member.Email;
             worksheet.Cell(row, 5).Value = member.PhoneNumber;
-            worksheet.Cell(row, 6).Value = member.College.ToString();
+            worksheet.Cell(row, 6).Value = member.College;
             worksheet.Cell(row, 7).Value =
                 member.DateOfBirth.ToString("dd.MM.yyyy.");
-            worksheet.Cell(row, 8).Value = member.BirthPlace;
+            worksheet.Cell(row, 8).Value = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(member.BirthPlace);
 
             row++;
         }

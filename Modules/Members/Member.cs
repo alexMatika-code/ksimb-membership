@@ -18,7 +18,7 @@ public sealed class Member
     public required string PersonalIdentityNumber { get; set; }
 
     public required string BirthPlace { get; set; }
-    
+
     public string College { get; set; }
 
     public DateOnly DateOfBirth { get; set; }
@@ -30,50 +30,50 @@ public sealed class Member
     public Gender Gender { get; set; }
 
     public bool IsAdmin { get; set; }
-    
+
     public Guid? ApproverId { get; set; }
-    
+
     public DateTimeOffset? ApprovedAt { get; set; }
-    
+
     public int? MemberCardNumber { get; set; }
-    
-    public bool IsCardCreated  { get; set; }
+
+    public bool IsCardCreated { get; set; }
 }
 
 public enum College
 {
     NisamStudent,
+    AF,
+    ADU,
+    AGR,
+    ALU,
+    EFZG,
+    ERF,
+    FBF,
     FER,
-    FSB,
+    FFRZ,
+    FFZG,
+    FHS,
     FKIT,
     FPZ,
-    AF,
-    GF,
-    GEOD,
-    GRF,
-    RGN,
-    TTF,
-    EFZG,
-    PFZG,
-    FFZG,
     FPZG,
-    FHS,
-    ERF,
-    UFZG,
-    KIF,
-    FFRZ,
-    MEF,
-    SFZG,
-    FBF,
-    VEF,
-    PMF,
-    PBF,
-    AGR,
+    FSB,
     FŠDT,
+    GEOD,
+    GF,
+    GRF,
     KBF,
-    ADU,
-    ALU,
+    KIF,
+    MEF,
     MUZA,
+    PBF,
+    PFZG,
+    PMF,
+    RGN,
+    SFZG,
+    TTF,
+    UFZG,
+    VEF,
     Drugo
 }
 

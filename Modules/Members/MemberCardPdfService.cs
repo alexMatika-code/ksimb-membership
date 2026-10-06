@@ -11,20 +11,20 @@ internal sealed class MemberCardPdfService
     private const float CardWidth = 85.6f;
     private const float CardHeight = 53.98f;
 
-    private const float HorizontalGap = 2f;
-    private const float VerticalGap = 0.5f;
+    private const float HorizontalGap = 8f;
+    private const float VerticalGap = 1.5f;
 
     private const float PageLeft = 14f;
     private const float PageTop = 8f;
 
     private const float FirstNameX = 13f;
-    private const float FirstNameY = 9.5f;
+    private const float FirstNameY = 8.7f;
 
     private const float LastNameX = 20f;
-    private const float LastNameY = 15.3f;
+    private const float LastNameY = 14.5f;
 
     private const float CardNumberX = 28f;
-    private const float CardNumberY = 20.8f;
+    private const float CardNumberY = 20.3f;
 
     private readonly IWebHostEnvironment _environment;
 
@@ -175,7 +175,6 @@ internal sealed class MemberCardPdfService
             .PaddingLeft(x, Unit.Millimetre)
             .PaddingTop(y, Unit.Millimetre)
             .Text(text)
-            .FontFamily("Georgia")
             .FontSize(7)
             .SemiBold();
     }
