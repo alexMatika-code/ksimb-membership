@@ -6,23 +6,25 @@ namespace ksimb_membership.Modules.Members;
 
 public interface IMembersService
 {
-    public Task<List<Member>> GetAllMembers();
+    Task<List<Member>> GetAllMembers();
 
-    public Task<Member?> GetMemberById(Guid id);
+    Task<Member?> GetMemberById(Guid id);
 
-    public Task<Member?> GetMemberByPersonalId(string oib);
+    Task<Member?> GetMemberByPersonalId(string oib);
 
-    public Task<Member> AddMember(Member member);
+    Task<Member> AddMember(Member member);
 
-    public Task<Guid?> DeleteMember(Guid id, Guid? adminId);
+    Task<Guid?> DeleteMember(Guid id, Guid? adminId);
 
-    public Task<Member?> UpdateMembership(Guid id, MembershipStatus membershipStatus, Guid? adminId);
+    Task<Member?> UpdateMembership(Guid id, MembershipStatus membershipStatus, Guid? adminId);
 
-    public Task<Member?> UpdateAdminStatus(Guid id, bool status);
+    Task<Member?> UpdateAdminStatus(Guid id, bool status);
 
-    public Task UpdateCardCreationStatuses(List<Guid> ids);
+    Task UpdateCardCreationStatuses(List<Guid> ids);
 
     Task<byte[]> ExportMembers();
+
+    Task<MembersCount> GetMembersCountAsync();
 }
 
 internal sealed class MembersService(
@@ -190,4 +192,14 @@ internal sealed class MembersService(
 
         return stream.ToArray();
     }
+
+    public async Task<MembersCount> GetMembersCountAsync()
+    {
+        await using var context = await dbContextFactory.CreateDbContextAsync();
+        var active = await context.Members.CountAsync(m => m.Status == MembershipStatus.Active);
+        var pending = await context.Members.CountAsync(m => m.Status == MembershipStatus.Pending);
+        return new MembersCount(active, pending);
+    }
 }
+
+public record MembersCount(int Active, int Pending);
