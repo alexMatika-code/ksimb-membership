@@ -159,7 +159,7 @@
                                             @if (_member.ApprovedAt.HasValue)
                                             {
                                                 <span class="text-muted small">
-                                                    · @_member.ApprovedAt.Value.ToString("dd.MM.yyyy. HH:mm")
+                                                    · @_member.ApprovedAt.Value.ToLocalTime().ToString("dd.MM.yyyy. HH:mm")
                                                 </span>
                                             }
                                         </div>
