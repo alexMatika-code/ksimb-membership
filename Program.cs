@@ -90,7 +90,6 @@ app.MapGet("/api/members/cards", async (
 {
     var members = await dbContext.Members
         .Where(x =>
-            x.Status == MembershipStatus.Active &&
             x.IsCardCreated == false &&
             x.MemberCardNumber != null)
         .OrderBy(x => x.MemberCardNumber)
