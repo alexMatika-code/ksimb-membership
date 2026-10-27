@@ -159,7 +159,7 @@
                                             @if (_member.ApprovedAt.HasValue)
                                             {
                                                 <span class="text-muted small">
-                                                    · @_member.ApprovedAt.Value.ToString("dd.MM.yyyy. HH:mm")
+                                                    · @_member.ApprovedAt.Value.ToLocalTime().ToString("dd.MM.yyyy. HH:mm")
                                                 </span>
                                             }
                                         </div>
@@ -171,7 +171,7 @@
                         </div>
                     </div>
 
-                    @if (_member.Status is MembershipStatus.Pending && _currentUserId == _member.Id)
+                    @if (_member.Status is MembershipStatus.Pending)
                     {
                         <div class="mt-3 text-secondary small">
                             <p class="mb-1">
